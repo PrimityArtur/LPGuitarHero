@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Experimento Funcional Canvas</title>
+    <style>
+        body { background-color: #222; color: white; display: flex; flex-direction: column; align-items: center; font-family: sans-serif; }
+        canvas { background-color: #111; border: 4px solid #555; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h2>Presiona las flechas de tu teclado</h2>
+    <canvas id="lienzo" width="600" height="400"></canvas>
+
+    <script>
+        // Detectar automáticamente si estamos en localhost o en Railway
+        const protocolo = window.location.protocol === "https:" ? "wss:" : "ws:";
+        const wsUrl = `${protocolo}//${window.location.host}/`;
+        
+        const socket = new WebSocket(wsUrl);
+        const canvas = document.getElementById("lienzo");
+        const ctx = canvas.getContext("2d");
+
+        // Al presionar una tecla, enviar mensaje de texto puro al servidor
+        window.addEventListener("keydown", (e) => {
+            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.key)) {
+                socket.send(e.key);
+            }
+        });
+
+        // Al recibir el mapa inmutable (en formato JSON) desde Clojure
+        socket.onmessage = (evento) => {
+            const estado = JSON.parse(evento.data);
+            
+            // 1. Limpiamos el Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 2. Dibujamos a todos los jugadores y sus teclas
+            ctx.font = "24px Arial";
+            ctx.fillStyle = "#00FF00";
+            
+            let posicionY = 50;
+            for (const [idJugador, tecla] of Object.entries(estado)) {
+                ctx.fillText(`${idJugador} presionó: ${tecla}`, 50, posicionY);
+                posicionY += 40; // Separación hacia abajo para el siguiente jugador
+            }
+        };
+    </script>
+</body>
+</html>
