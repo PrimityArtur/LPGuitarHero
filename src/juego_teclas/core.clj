@@ -36,7 +36,7 @@
   (server/with-channel req canal
     ;; Cuando alguien se conecta:
     (swap! canales-activos conj canal)
-    (let [id-jugador (str "Jugador_" (rand-int 1000))]
+    (let [id-jugador (str "Player" (rand-int 1000))]
 
       ;; Cuando el jugador presiona una flecha:
       (server/on-receive canal
@@ -64,3 +64,25 @@
   (let [puerto (Integer/parseInt (or (System/getenv "PORT") "3000"))]
     (println "Servidor funcional iniciado en el puerto:" puerto)
     (server/run-server app {:port puerto})))
+
+
+
+
+
+;; --- ZONA DE DESARROLLO (REPL) ---
+;; En Clojure, este bloque 'comment' no se ejecuta al hacer el despliegue en Railway,
+;; pero puedes ejecutar las líneas individualmente en tu VS Code.
+;; ctrl+shift+p -> "Calva: Start a Project REPL and Connect (aka Jack-In)" -> Leiningen -> OK
+(comment
+  ;; 1. Encender el servidor en tu computadora: alt + Enter sobre la linea para ejecutar el server local
+  ;; si se desea hacer cambias en la funcion agregada o cambiada se debe hacer Alt+Enter y ya se refleja los cambios 
+  (def servidor-local (-main))
+
+  ;; 2. Apagar el servidor (ejecuta esto antes de encenderlo de nuevo si falla)
+  (servidor-local)
+  
+  ;; 3. Ver qué tiene el Agente en este momento exacto
+  @estado-partida
+  ;; IP:PORT
+  @canales-activos
+)

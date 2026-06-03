@@ -1,0 +1,92 @@
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(defn manejador-ws [req]
+  (server/with-channel req canal
+    ;; Cuando alguien se conecta:
+    (swap! canales-activos conj canal)
+    (let [id-jugador (str "Player" (rand-int 1000))]
+
+      ;; Cuando el jugador presiona una flecha:
+      (server/on-receive canal
+                         (fn [tecla]
+                           ;; Enviamos la FUNCIÓN PURA al AGENTE (Paso de mensajes)
+                           (send estado-partida registrar-tecla id-jugador tecla)))
+
+      ;; Cuando el jugador cierra la ventana:
+      (server/on-close canal
+                       (fn [_]
+                         (swap! canales-activos disj canal)
+                         (send estado-partida eliminar-jugador id-jugador))))))
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉juego-teclas.core꞉> 
+(servidor-local)
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉juego-teclas.core꞉> 
+(def servidor-local (-main))
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+@canales-activos
+clj꞉juego-teclas.core꞉> 
+@estado-partida
+clj꞉juego-teclas.core꞉> 
+@canales-activos
+clj꞉juego-teclas.core꞉> 
+@canales-activos
+clj꞉juego-teclas.core꞉> 
