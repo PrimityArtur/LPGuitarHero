@@ -1,0 +1,11 @@
+(ns rhythm-game.songs)
+(def canciones
+  [{:id 1
+    :nombre "Believer"
+    :duracion 204}
+   {:id 2
+    :nombre "Thunder"
+    :duracion 187}
+   {:id 3
+    :nombre "Demons"
+    :duracion 177}])
