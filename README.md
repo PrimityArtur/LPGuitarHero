@@ -1,4 +1,4 @@
-# juego-teclas
+# rhythm_game
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from https://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar juego-teclas-0.1.0-standalone.jar [args]
+    $ java -jar rhythm_game-0.1.0-standalone.jar [args]
 
 ## Options
 

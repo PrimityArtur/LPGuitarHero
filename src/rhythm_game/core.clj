@@ -1,0 +1,61 @@
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "public/index.html"))}))
+
+(defonce servidor
+  (atom nil))
+
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+
+(defn detener-servidor!
+  []
+
+  (when @servidor
+    (@servidor)
+
+    (reset! servidor nil)
+
+    (println "Servidor detenido")))
+
+(defn -main
+  [& _]
+
+  (iniciar-servidor!))
+
+
+
+;; --- REPL ---
+;; En Clojure, este bloque 'comment' no se ejecuta al hacer el despliegue pero se puede ejecutar las lineas individualmente
+;; PARA EJECUTAR EL PROYECTO ctrl+shift+p -> "Calva: Start a Project REPL and Connect (aka Jack-In)" -> Leiningen -> OK
+(comment
+  ;; ENCENDER el servidor en tu computadora: alt + Enter sobre (servidor-local) para ejecutar el server local
+  ;; si se desea hacer cambias en la funcion agregada o cambiada se debe hacer Alt+Enter en dicha funcion cambiada y ya se refleja los cambios 
+  (def servidor-local (-main))
+
+  ;; APAGAR el servidor (ejecuta esto antes de encenderlo de nuevo si falla)
+  (detener-servidor!) 
+)

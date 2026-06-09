@@ -1,3 +1,3 @@
-# Introduction to juego-teclas
+# Introduction to rhythm_game
 
 TODO: write [great documentation](https://jacobian.org/writing/what-to-write/)

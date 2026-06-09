@@ -1,92 +1,323 @@
 (when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+clj꞉rhythm-game.core꞉> 
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [rhythm-game.websocket :refer [ws-handler]]))
+clj꞉rhythm-game.core꞉> 
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
 ; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
 ; Address already in use: bind
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
 (servidor-local)
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
-(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
-(def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-(defn manejador-ws [req]
-  (server/with-channel req canal
-    ;; Cuando alguien se conecta:
-    (swap! canales-activos conj canal)
-    (let [id-jugador (str "Player" (rand-int 1000))]
+; Execution error (NullPointerException) at rhythm-game.core/eval10965 (core.clj:60).
+; Cannot invoke "clojure.lang.IFn.invoke()" because the return value of "clojure.lang.Var.getRawRoot()" is null
+clj꞉rhythm-game.core꞉> 
+(defn detener-servidor!
+  []
 
-      ;; Cuando el jugador presiona una flecha:
-      (server/on-receive canal
-                         (fn [tecla]
-                           ;; Enviamos la FUNCIÓN PURA al AGENTE (Paso de mensajes)
-                           (send estado-partida registrar-tecla id-jugador tecla)))
+  (when @servidor
+    (@servidor)
 
-      ;; Cuando el jugador cierra la ventana:
-      (server/on-close canal
-                       (fn [_]
-                         (swap! canales-activos disj canal)
-                         (send estado-partida eliminar-jugador id-jugador))))))
-clj꞉juego-teclas.core꞉> 
+    (reset! servidor nil)
+
+    (println "Servidor detenido")))
+clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
 ; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
 ; Address already in use: bind
-clj꞉juego-teclas.core꞉> 
-(servidor-local)
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
+(defn -main
+  [& _]
+
+  (iniciar-servidor!))
+clj꞉rhythm-game.core꞉> 
+(defn -main
+  [& _]
+
+  (iniciar-servidor!))
+clj꞉rhythm-game.core꞉> 
+(defn detener-servidor!
+  []
+
+  (when @servidor
+    (@servidor)
+
+    (reset! servidor nil)
+
+    (println "Servidor detenido")))
+clj꞉rhythm-game.core꞉> 
+(defn detener-servidor!
+  []
+
+  (when @servidor
+    (@servidor)
+
+    (reset! servidor nil)
+
+    (println "Servidor detenido")))
+clj꞉rhythm-game.core꞉> 
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+clj꞉rhythm-game.core꞉> 
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "public/index.html"))}))
+clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
 (when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-@canales-activos
-clj꞉juego-teclas.core꞉> 
-@estado-partida
-clj꞉juego-teclas.core꞉> 
-@canales-activos
-clj꞉juego-teclas.core꞉> 
-@canales-activos
-clj꞉juego-teclas.core꞉> 
+clj꞉rhythm-game.core꞉> 
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "index.html"))}))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:17:19).
+; No such namespace: io
+clj꞉rhythm-game.core꞉> 
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "public/index.html"))}))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:17:19).
+; No such namespace: io
+clj꞉rhythm-game.core꞉> 
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "public/index.html"))}))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:18:19).
+; No such namespace: io
+clj꞉rhythm-game.core꞉> 
+@servidor
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+clj꞉rhythm-game.core꞉> 
+(defn app
+  [req]
+
+  (case (:uri req)
+
+    "/ws"
+    (ws-handler req)
+
+    {:status 200
+     :headers {"Content-Type" "text/html"}
+     :body (slurp (io/resource "public/index.html"))}))
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+@servidor
+clj꞉rhythm-game.core꞉> 
+(defn buscar-cancion
+  [id]
+  (first
+   (filter
+    #(= id (:id %))
+    canciones)))
+clj꞉rhythm-game.game꞉> 
+(def estado-servidor
+  (atom
+   {:jugadores []
+    :partida nil}))
+clj꞉rhythm-game.state꞉> 
+@estado-servidor
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(def estado-servidor
+  (atom
+   {:jugadores []
+    :partida nil}))
+clj꞉rhythm-game.state꞉> 
+(def estado-servidor
+  (atom
+   {:jugadores []
+    :partida nil}))
+clj꞉rhythm-game.state꞉> 
+(def estado-servidor
+  (atom
+   {:jugadores []
+    :partida nil}))
+clj꞉rhythm-game.state꞉> 
+@ws/estado-partida
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; No such namespace: ws
+clj꞉rhythm-game.core꞉> 
+@ws-handler/estado-partida
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; No such namespace: ws-handler
+clj꞉rhythm-game.core꞉> 
+@rhythm-game.websocket/estado-partida
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; No such var: rhythm-game.websocket/estado-partida
+clj꞉rhythm-game.core꞉> 
+(defn broadcast!
+  [data]
+  (doseq [jugador (:jugadores @estado-servidor)]
+    (enviar! (:socket jugador)
+             data)))
+clj꞉rhythm-game.websocket꞉> 
+@rhythm-game.websocket/estado-servidor
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; No such var: rhythm-game.websocket/estado-servidor
+clj꞉rhythm-game.core꞉> 
+@rhythm-game.websocket/estado-servidor
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; No such var: rhythm-game.websocket/estado-servidor
+clj꞉rhythm-game.core꞉> 
+(defn lista-publica-jugadores
+  []
+  (mapv
+   #(select-keys %
+                 [:nombre :rol])
+
+   (:jugadores @estado-servidor)))
+clj꞉rhythm-game.websocket꞉> 
+@rhythm-game.websocket/lista-publica-jugadores
+; Execution error (ClassCastException) at rhythm-game.core/eval11084 (core.clj:0).
+; class rhythm_game.websocket$lista_publica_jugadores cannot be cast to class java.util.concurrent.Future (rhythm_game.websocket$lista_publica_jugadores is in unnamed module of loader clojure.lang.DynamicClassLoader @225bc8ad; java.util.concurrent.Future is in module java.base of loader 'bootstrap')
+clj꞉rhythm-game.core꞉> 
+(defn lista-publica-jugadores
+  []
+  (mapv
+   #(select-keys %
+                 [:nombre :rol])
+
+   (:jugadores @estado-servidor)))
+clj꞉rhythm-game.websocket꞉> 
+(defn lista-publica-jugadores
+  []
+  (mapv
+   #(select-keys %
+                 [:nombre :rol])
+
+   (:jugadores @estado-servidor)))
+clj꞉rhythm-game.websocket꞉> 
+(defn lista-publica-jugadores
+  []
+  (mapv
+   #(select-keys %
+                 [:nombre :rol])
+
+   (:jugadores @estado-servidor)))
+clj꞉rhythm-game.websocket꞉> 
+(defn agregar-jugador!
+  [nombre socket]
+
+  (let [rol (asignar-rol)
+
+        jugador (assoc
+                 (crear-jugador nombre socket)
+                 :rol rol)]
+
+    (swap! estado-servidor
+           update
+           :jugadores
+           conj
+           jugador)
+
+    jugador))
+clj꞉rhythm-game.websocket꞉> 
+(declare
+ partida-activa?
+ buscar-jugador
+ reconectar-jugador!
+ marcar-desconectado!
+ quitar-jugador-por-socket!
+ reasignar-admin!
+ enviar-canciones!
+ buscar-jugador-por-socket
+ enviar-a-jugadores!
+ iniciar-partida!)
+clj꞉rhythm-game.websocket꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
