@@ -19,7 +19,7 @@
 
     (or (resp/resource-response (subs uri 1)
                                 {:root "public"}) ;; js, css
-        {:status 404 :body "File no Found"})))
+        {:status 404 :body "File no Found"}))))
 
 (defonce servidor
   (atom nil))
