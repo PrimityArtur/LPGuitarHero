@@ -1,11 +1,7 @@
-(ns rhythm-game.songs)
+(ns rhythm-game.songs
+  (:require
+   [rhythm-game.resource-loader
+    :refer [cargar-catalogo]]))
+
 (def canciones
-  [{:id 1
-    :nombre "Believer"
-    :duracion 204}
-   {:id 2
-    :nombre "Thunder"
-    :duracion 187}
-   {:id 3
-    :nombre "Demons"
-    :duracion 177}])
+  (cargar-catalogo))

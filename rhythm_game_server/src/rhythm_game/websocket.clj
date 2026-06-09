@@ -2,7 +2,10 @@
   (:require
    [org.httpkit.server :as http]
    [rhythm-game.state :refer [estado-servidor]]
-   [rhythm-game.messages :refer [->json <-json]]))
+   [rhythm-game.messages :refer [->json <-json]]
+   [rhythm-game.songs :refer [canciones]]
+   [rhythm-game.game :refer [crear-partida!]]))
+
 
 (declare
  partida-activa?
@@ -10,7 +13,11 @@
  reconectar-jugador!
  marcar-desconectado!
  quitar-jugador-por-socket!
- reasignar-admin!)
+ reasignar-admin!
+ enviar-canciones!
+ buscar-jugador-por-socket
+ enviar-a-jugadores!
+ iniciar-partida!)
 
 (defn enviar!
   [socket data]
@@ -99,6 +106,8 @@
           :rol (:rol jugador)
           :jugadores
           (lista-publica-jugadores)})
+        (when (= "admin" (:rol jugador))
+          (enviar-canciones! socket))
         (broadcast!
          {:eventoServidor "actualizarJugadores"
           :jugadores
@@ -134,7 +143,13 @@
       (procesar-conexion!
        socket
        (:nombre data))
-      nil)))
+      nil)
+    "iniciarPartida"
+    (iniciar-partida!
+     socket
+     (:cancion data)
+     (:cantidadJugadores data))))
+
 
 (defn ws-handler
   [req]
@@ -226,3 +241,52 @@
                     "admin"
                     "usuario")))
          jugadores))))))
+
+(defn enviar-canciones!
+  [socket]
+
+  (enviar!
+   socket
+
+   {:eventoServidor "listaCanciones"
+    :canciones canciones}))
+
+(defn buscar-jugador-por-socket
+  [socket]
+  (first
+   (filter
+    #(= socket (:socket %))
+    (:jugadores @estado-servidor))))
+
+(defn enviar-a-jugadores!
+  [jugadores data]
+
+  (doseq [jugador jugadores]
+
+    (enviar!
+     (:socket jugador)
+     data)))
+
+(defn iniciar-partida!
+  [socket cancion-id cantidad]
+  (let [jugador
+        (buscar-jugador-por-socket socket)]
+    (if (not= "admin" (:rol jugador))
+      (enviar!
+       socket
+       {:eventoServidor "error"
+        :mensaje "Solo el admin puede iniciar la partida"})
+      (let [{:keys [cancion notas jugadores]}
+            (crear-partida!
+             cancion-id
+             cantidad)]
+        (enviar-a-jugadores!
+         jugadores
+         {:eventoServidor "partidaIniciada"
+          :cancion cancion
+          :jugadores
+          (mapv
+           #(select-keys %
+                         [:nombre :rol])
+           jugadores)
+          :notas notas})))))

@@ -1,0 +1,5 @@
+[
+  {"tiempo":1000,"direccion":"derecha"},
+  {"tiempo":1300,"direccion":"derecha"},
+  {"tiempo":1800,"direccion":"abajo"}
+]

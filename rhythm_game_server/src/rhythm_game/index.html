@@ -1,27 +1,247 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rhythm Game Test Client</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#1e1e1e;
+    color:white;
+    margin:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+}
+
+.card{
+    background:#2d2d2d;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+input, button{
+    padding:10px;
+    margin:5px;
+    border:none;
+    border-radius:5px;
+}
+
+input{
+    width:200px;
+}
+
+button{
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:0.9;
+}
+
+#log{
+    background:black;
+    color:#00ff00;
+    padding:10px;
+    height:300px;
+    overflow-y:auto;
+    font-family:monospace;
+}
+
+#jugadores{
+    background:#111;
+    padding:10px;
+    min-height:100px;
+}
+
+</style>
+</head>
+
 <body>
 
-<button onclick="conectar()">Conectar</button>
+<div class="container">
+
+    <h1>🎵 Rhythm Game Test Client</h1>
+
+    <div class="card">
+
+        <h3>Conexión</h3>
+
+        <input
+            id="nombre"
+            type="text"
+            placeholder="Nombre jugador">
+
+        <button onclick="conectar()">
+            Conectar
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Iniciar Partida</h3>
+
+        <input
+            id="cancion"
+            type="number"
+            value="1"
+            placeholder="ID Canción">
+
+        <input
+            id="cantidad"
+            type="number"
+            value="2"
+            placeholder="Jugadores">
+
+        <button onclick="iniciarPartida()">
+            Iniciar Partida
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Jugadores</h3>
+
+        <div id="jugadores">
+            Sin jugadores
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Mensajes</h3>
+
+        <div id="log"></div>
+
+    </div>
+
+</div>
 
 <script>
 
-function conectar() {
+let ws;
 
-    const ws =
+function log(texto){
+
+    const logDiv =
+        document.getElementById("log");
+
+    logDiv.innerHTML +=
+        texto + "<br>";
+
+    logDiv.scrollTop =
+        logDiv.scrollHeight;
+}
+
+function conectar(){
+
+    const nombre =
+        document.getElementById("nombre").value;
+
+    ws =
         new WebSocket("ws://localhost:8080/ws");
 
     ws.onopen = () => {
 
+        log("🟢 Conectado");
+
         ws.send(JSON.stringify({
-            eventoCliente: "conectar",
-            nombre: "Enzo"
+            eventoCliente:"conectar",
+            nombre:nombre
         }));
     };
 
-    ws.onmessage = (e) => {
-        console.log(JSON.parse(e.data));
+    ws.onmessage = (evento) => {
+
+        const data =
+            JSON.parse(evento.data);
+
+        log(
+            "⬅️ " +
+            JSON.stringify(data)
+        );
+
+        if(data.jugadores){
+
+            mostrarJugadores(
+                data.jugadores
+            );
+        }
     };
+
+    ws.onclose = () => {
+
+        log("🔴 Desconectado");
+    };
+
+    ws.onerror = (e) => {
+
+        console.error(e);
+
+        log("❌ Error");
+    };
+}
+
+function iniciarPartida(){
+
+    if(!ws){
+        alert("Conéctate primero");
+        return;
+    }
+
+    const cancion =
+        Number(
+            document.getElementById("cancion").value
+        );
+
+    const cantidad =
+        Number(
+            document.getElementById("cantidad").value
+        );
+
+    const mensaje = {
+
+        eventoCliente:"iniciarPartida",
+
+        cancion:cancion,
+
+        cantidadJugadores:cantidad
+    };
+
+    ws.send(
+        JSON.stringify(mensaje)
+    );
+
+    log(
+        "➡️ " +
+        JSON.stringify(mensaje)
+    );
+}
+
+function mostrarJugadores(jugadores){
+
+    const div =
+        document.getElementById("jugadores");
+
+    div.innerHTML = "";
+
+    jugadores.forEach(j => {
+
+        div.innerHTML += `
+            <div>
+                👤 ${j.nombre}
+                (${j.rol})
+            </div>
+        `;
+    });
 }
 
 </script>
