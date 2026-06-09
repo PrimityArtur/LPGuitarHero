@@ -441,3 +441,7 @@ clj꞉rhythm-game.core꞉> 
 clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
 clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 

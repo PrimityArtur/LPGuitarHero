@@ -3,6 +3,7 @@
    [org.httpkit.server :as http]
    [clojure.java.io :as io]
    [ring.util.response :as resp]
+   [ring.middleware.content-type :refer [wrap-content-type]]
    [rhythm-game.websocket :refer [ws-handler]])
   (:gen-class))
 
@@ -30,7 +31,7 @@
   (reset!
    servidor
    (http/run-server
-    app
+    (wrap-content-type app)
     {:port 8080}))
 
   (println "Servidor iniciado en puerto 8080"))

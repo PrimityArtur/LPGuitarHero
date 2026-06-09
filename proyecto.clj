@@ -5,6 +5,7 @@ Raiz: rhythm_game
 - resources
 -- notes
 -- public
+--- index.html
 --- css
 ---- style.css
 --- js
@@ -34,6 +35,84 @@ Raiz: rhythm_game
   :profiles {:uberjar {:aot :all
                        :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
 
+
+// rhythm_game/resources/public/index.html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Rhythm Game Test Client</title>
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎵 Rhythm Game Test Client</h1>
+
+    <div class="card">
+
+        <h3>Conexión</h3>
+
+        <input
+            id="nombre"
+            type="text"
+            placeholder="Nombre jugador">
+
+        <button onclick="conectar()">
+            Conectar
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Iniciar Partida</h3>
+
+        <input
+            id="cancion"
+            type="number"
+            value="1"
+            placeholder="ID Canción">
+
+        <input
+            id="cantidad"
+            type="number"
+            value="2"
+            placeholder="Jugadores">
+
+        <button onclick="iniciarPartida()">
+            Iniciar Partida
+        </button>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Jugadores</h3>
+
+        <div id="jugadores">
+            Sin jugadores
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Mensajes</h3>
+
+        <div id="log"></div>
+
+    </div>
+
+</div>
+
+<script src="/js/main.js"></script>
+
+</body>
+</html>
 
 // rhythm_game/resources/public/css/style.css
 
@@ -222,18 +301,18 @@ function mostrarJugadores(jugadores){
 
 (defn app
   [req]
-
-  (case (:uri req)
+  (let [uri (:uri req)]
+  (case uri
 
     "/ws"
     (ws-handler req)
 
-    "/" 
+    "/"
     (resp/resource-response "public/index.html")
 
-    (or (resp/resource-response (:uri req)
+    (or (resp/resource-response (subs uri 1)
                                 {:root "public"}) ;; js, css
-        {:status 404 :body "File no Found"})))
+        {:status 404 :body "File no Found"}))))
 
 (defonce servidor
   (atom nil))
