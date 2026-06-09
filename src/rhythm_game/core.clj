@@ -3,21 +3,22 @@
    [org.httpkit.server :as http]
    [clojure.java.io :as io]
    [ring.util.response :as resp]
+   [ring.middleware.resource :refer [wrap-resource]]
    [rhythm-game.websocket :refer [ws-handler]])
   (:gen-class))
 
 (defn app
   [req]
-
-  (case (:uri req)
+  (let [uri (:uri req)]
+  (case uri
 
     "/ws"
     (ws-handler req)
 
-    "/" 
+    "/"
     (resp/resource-response "public/index.html")
 
-    (or (resp/resource-response (:uri req)
+    (or (resp/resource-response (subs uri 1)
                                 {:root "public"}) ;; js, css
         {:status 404 :body "File no Found"})))
 

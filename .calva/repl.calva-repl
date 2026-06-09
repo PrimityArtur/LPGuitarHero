@@ -435,3 +435,9 @@ clj꞉rhythm-game.core꞉> 
 (defonce servidor
   (atom nil))
 clj꞉rhythm-game.core꞉> 
+app
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
