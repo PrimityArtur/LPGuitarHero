@@ -321,3 +321,117 @@ clj꞉rhythm-game.websocket꞉> 
 clj꞉rhythm-game.core꞉> 
 (detener-servidor!)
 clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:60:23).
+; Unable to resolve symbol: -main in this context
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:60:23).
+; Unable to resolve symbol: -main in this context
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:63:3).
+; Unable to resolve symbol: detener-servidor! in this context
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:60:23).
+; Unable to resolve symbol: -main in this context
+clj꞉rhythm-game.core꞉> 
+(defn -main
+  [& _]
+
+  (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:50:3).
+; Unable to resolve symbol: iniciar-servidor! in this context
+clj꞉rhythm-game.core꞉> 
+(defn iniciar-servidor!
+  []
+
+  (reset!
+   servidor
+   (http/run-server
+    app
+    {:port 8080}))
+
+  (println "Servidor iniciado en puerto 8080"))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:29:3).
+; Unable to resolve symbol: servidor in this context
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [ring.util.response :as resp]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+; Execution error (FileNotFoundException) at rhythm-game.core/eval10178$loading (core.clj:1).
+; Could not locate ring/util/response__init.class, ring/util/response.clj or ring/util/response.cljc on classpath.
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [ring.util.response :as resp]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+; Execution error (FileNotFoundException) at rhythm-game.core/eval10184$loading (core.clj:1).
+; Could not locate ring/util/response__init.class, ring/util/response.clj or ring/util/response.cljc on classpath.
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [ring.util.response :as resp]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+; Execution error (FileNotFoundException) at rhythm-game.core/eval10190$loading (core.clj:1).
+; Could not locate ring/util/response__init.class, ring/util/response.clj or ring/util/response.cljc on classpath.
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+clj꞉rhythm-game.core꞉> 
+(ns rhythm-game.core
+  (:require
+   [org.httpkit.server :as http]
+   [clojure.java.io :as io]
+   [ring.util.response :as resp]
+   [rhythm-game.websocket :refer [ws-handler]])
+  (:gen-class))
+; Execution error (FileNotFoundException) at rhythm-game.core/eval10971$loading (core.clj:1).
+; Could not locate ring/util/response__init.class, ring/util/response.clj or ring/util/response.cljc on classpath.
+clj꞉rhythm-game.core꞉> 
+(defproject rhythm_game "0.1.0-SNAPSHOT"
+  :dependencies [[org.clojure/clojure "1.12.0"]
+                 [http-kit "2.8.0"]
+                 [cheshire "5.13.0"]
+                 [ring/ring-core "1.15.4"]]
+  :main ^:skip-aot rhythm-game.core
+  :target-path "target/%s"
+  :profiles {:uberjar {:aot :all
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\project.clj:1:1).
+; Unable to resolve symbol: defproject in this context
+clj꞉user꞉> 
+(defproject rhythm_game "0.1.0-SNAPSHOT"
+  :dependencies [[org.clojure/clojure "1.12.0"]
+                 [http-kit "2.8.0"]
+                 [cheshire "5.13.0"]]
+  :main ^:skip-aot rhythm-game.core
+  :target-path "target/%s"
+  :profiles {:uberjar {:aot :all
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}})
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\project.clj:1:1).
+; Unable to resolve symbol: defproject in this context
+clj꞉user꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(defonce servidor
+  (atom nil))
+clj꞉rhythm-game.core꞉> 

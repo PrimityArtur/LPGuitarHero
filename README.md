@@ -31,4 +31,10 @@ El archivo project.clj -> es para agregar dependencias lo mismo que maven y grad
 ==============================================================
 PARA EJECUTAR EL CODIGO EN LOCAL: 
 
-Debes activar el REPL y te permitira recompilar funciones individuales 
+Debes activar el REPL y te permitira recompilar funciones individuales. dentro de src/rhythm_game/core.clj al final se encuentra la seccion comment donde estan los pasos para su ejecucion    
+
+    - En Clojure, este bloque 'comment' no se ejecuta al hacer el despliegue pero se puede ejecutar las lineas individualmente
+    - PARA EJECUTAR EL PROYECTO ctrl+shift+p -> "Calva: Start a Project REPL and Connect (aka Jack-In)" -> Leiningen -> OK
+    - ENCENDER el servidor en tu computadora: alt + Enter sobre (servidor-local) para ejecutar el server local
+    - si se desea hacer cambias en la funcion agregada o cambiada se debe hacer Alt+Enter en dicha funcion cambiada y ya se refleja los cambios 
+    - APAGAR el servidor (ejecuta esto antes de encenderlo de nuevo si falla)

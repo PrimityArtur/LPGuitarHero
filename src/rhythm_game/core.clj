@@ -2,6 +2,7 @@
   (:require
    [org.httpkit.server :as http]
    [clojure.java.io :as io]
+   [ring.util.response :as resp]
    [rhythm-game.websocket :refer [ws-handler]])
   (:gen-class))
 
@@ -13,9 +14,12 @@
     "/ws"
     (ws-handler req)
 
-    {:status 200
-     :headers {"Content-Type" "text/html"}
-     :body (slurp (io/resource "public/index.html"))}))
+    "/" 
+    (resp/resource-response "public/index.html")
+
+    (or (resp/resource-response (:uri req)
+                                {:root "public"}) ;; js, css
+        {:status 404 :body "File no Found"})))
 
 (defonce servidor
   (atom nil))
