@@ -1,44 +1,34 @@
-# rhythm_game
+==============================================================
+PASOS PARA INSTALAR Y TRBAJAR CLOJURE EN DESPLIEGUE:
 
-FIXME: description
+Install Temurin JDK-25.0.3+9 https://adoptium.net/es/temurin/releases
+	- No es lo mismo que JDK de oracle
+Download lein.bat del leiningen.org  https://codeberg.org/leiningen/leiningen/
+	- Enlace directo al batch file https://codeberg.org/leiningen/leiningen/raw/branch/stable/bin/lein.bat
 
-## Installation
+Colocar el lein.bat en una carpeta nueva = C:\ClojureBin y colocar esta ruta en Path de variables de entorno en la parte de sistema
+	- Ejecutar los siguientes comandos en un cmd
+        - lein self-install
+        - lein
+        - lein version
+	- Con esto ya tendras listo e instalado leiningen que es el constructor de Clojure como Maven o Gradle de Java
 
-Download from https://example.com/FIXME.
+==============================================================
+CREAR UN NUEVO PROYECTO CON LEIN: 
 
-## Usage
+En Visual S. Instalar Calva: Clojure & ClojureScript Interactive Programming.
 
-FIXME: explanation
+Para crear la estructura del juego. en un cmd desde la carpeta de proyecto ejecutar
+	- lein new app nombre-juego
 
-    $ java -jar rhythm_game-0.1.0-standalone.jar [args]
 
-## Options
+Una vez creado el proyecto lo mas importante son las carpetas
+	- Src: los codigos clojure backend
+	- Resource: html js frontend, json, etc
+	- Test: automatizacion de pruebas 
+El archivo project.clj -> es para agregar dependencias lo mismo que maven y gradle de Java
 
-FIXME: listing of options this app accepts.
+==============================================================
+PARA EJECUTAR EL CODIGO EN LOCAL: 
 
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2026 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-https://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+Debes activar el REPL y te permitira recompilar funciones individuales 

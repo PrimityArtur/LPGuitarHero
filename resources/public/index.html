@@ -146,8 +146,10 @@ function conectar(){
     const nombre =
         document.getElementById("nombre").value;
 
-    ws =
-        new WebSocket("ws://localhost:8080/ws");
+    const protocolo = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocolo}//${window.location.host}/ws`;
+
+    ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
 
