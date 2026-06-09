@@ -3,7 +3,6 @@
    [org.httpkit.server :as http]
    [clojure.java.io :as io]
    [ring.util.response :as resp]
-   [ring.middleware.resource :refer [wrap-resource]]
    [rhythm-game.websocket :refer [ws-handler]])
   (:gen-class))
 
