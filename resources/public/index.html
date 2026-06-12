@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Rhythm Game Test Client</title>
 
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -52,6 +52,24 @@
 
     <div class="card">
 
+        <h3>Simular Puntajes</h3>
+
+        <button onclick="enviarPerfect()">
+            Perfect (+100)
+        </button>
+
+        <button onclick="enviarGood()">
+            Good (+50)
+        </button>
+
+        <button onclick="enviarMiss()">
+            Miss (0)
+        </button>
+
+    </div>
+
+    <div class="card">
+
         <h3>Jugadores</h3>
 
         <div id="jugadores">
@@ -70,7 +88,7 @@
 
 </div>
 
-<script src="/js/main.js"></script>
+<script src="js/main.js"></script>
 
 </body>
 </html>

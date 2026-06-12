@@ -37,13 +37,37 @@
       :notas notas
       :jugadores-partida
       (mapv :nombre jugadores)
-      :terminados #{}})
+      :terminados #{}
+      :decisiones #{}})
     {:cancion cancion
      :notas notas
      :jugadores jugadores}))
 
-(ns rhythm-game.game
-  (:require
-   [rhythm-game.state :refer [estado-servidor]]
-   [rhythm-game.songs :refer [canciones]]
-   [rhythm-game.resource-loader :refer [cargar-notas]]))
+
+(defn mover-jugadores-al-final!
+  []
+
+  (let [participantes
+
+        (set
+         (get-in
+          @estado-servidor
+          [:partida :jugadores-partida]))
+
+        jugadores
+
+        (:jugadores @estado-servidor)
+        esperando
+        (filterv
+         #(not (participantes (:nombre %)))
+         jugadores)
+        jugados
+        (filterv
+         #(participantes (:nombre %))
+         jugadores)]
+    (swap!
+     estado-servidor
+     assoc
+     :jugadores
+     (vec
+      (concat esperando jugados)))))
