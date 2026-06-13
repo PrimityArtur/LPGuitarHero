@@ -22,12 +22,21 @@
   (let [cancion
         (buscar-cancion id-cancion)
         notas
-        (cargar-notas
-         (:archivoNotas cancion))
+        (cargar-notas (:archivoNotas cancion))
+        todos
+        (:jugadores @estado-servidor)
         jugadores
-        (vec
-         (take cantidad
-               (:jugadores @estado-servidor)))]
+        (vec (take cantidad todos))
+        esperando
+        (vec (drop cantidad todos))]
+    (swap!
+     estado-servidor
+     assoc
+     :jugadores
+     (vec
+      (concat
+       (mapv #(assoc % :en-partida true) jugadores)
+       esperando)))
     (swap!
      estado-servidor
      assoc
@@ -35,39 +44,8 @@
      {:activa true
       :cancion cancion
       :notas notas
-      :jugadores-partida
-      (mapv :nombre jugadores)
-      :terminados #{}
-      :decisiones #{}})
+      :jugadores-partida (mapv :nombre jugadores)
+      :terminados #{}})
     {:cancion cancion
      :notas notas
      :jugadores jugadores}))
-
-
-(defn mover-jugadores-al-final!
-  []
-
-  (let [participantes
-
-        (set
-         (get-in
-          @estado-servidor
-          [:partida :jugadores-partida]))
-
-        jugadores
-
-        (:jugadores @estado-servidor)
-        esperando
-        (filterv
-         #(not (participantes (:nombre %)))
-         jugadores)
-        jugados
-        (filterv
-         #(participantes (:nombre %))
-         jugadores)]
-    (swap!
-     estado-servidor
-     assoc
-     :jugadores
-     (vec
-      (concat esperando jugados)))))

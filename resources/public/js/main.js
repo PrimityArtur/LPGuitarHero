@@ -1,5 +1,6 @@
-
 let ws;
+
+let puntajeActual = 0;
 
 function log(texto){
 
@@ -15,25 +16,37 @@ function log(texto){
 
 function conectar(){
 
-    const nombre = document.getElementById("nombre").value;
+    const nombre =
+        document.getElementById("nombre").value;
 
-    const protocolo = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const wsUrl = `${protocolo}//${window.location.host}/ws`;
+    if(nombre.trim() === ""){
+        alert("Ingrese un nombre");
+        return;
+    }
 
-    console.log("HOST =", window.location.host);
-    console.log("PROTO =", window.location.protocol);
-    console.log("WS URL =", wsUrl);
-    
+    const protocolo =
+        window.location.protocol === "https:"
+        ? "wss:"
+        : "ws:";
+
+    const wsUrl =
+        `${protocolo}//${window.location.host}/ws`;
+
     ws = new WebSocket(wsUrl);
 
     ws.onopen = () => {
 
         log("🟢 Conectado");
 
-        ws.send(JSON.stringify({
-            eventoCliente:"conectar",
-            nombre:nombre
-        }));
+        ws.send(
+            JSON.stringify({
+                eventoCliente:"conectar",
+                nombre:nombre
+            })
+        );
+
+        document.getElementById("estadoNombre")
+            .textContent = nombre;
     };
 
     ws.onmessage = (evento) => {
@@ -46,12 +59,7 @@ function conectar(){
             JSON.stringify(data)
         );
 
-        if(data.jugadores){
-
-            mostrarJugadores(
-                data.jugadores
-            );
-        }
+        procesarEventoServidor(data);
     };
 
     ws.onclose = () => {
@@ -67,30 +75,212 @@ function conectar(){
     };
 }
 
+function procesarEventoServidor(data){
+
+    switch(data.eventoServidor){
+
+        case "libre":
+
+            if(data.rol){
+
+                document
+                    .getElementById("estadoRol")
+                    .textContent =
+                    data.rol;
+            }
+
+            if(data.jugadores){
+
+                mostrarJugadores(
+                    data.jugadores
+                );
+            }
+
+            break;
+
+        case "ocupado":
+
+            alert(
+                "Nombre ocupado"
+            );
+
+            break;
+
+        case "actualizarJugadores":
+
+            mostrarJugadores(
+                data.jugadores
+            );
+
+            break;
+
+        case "listaCanciones":
+
+            mostrarCanciones(
+                data.canciones
+            );
+
+            break;
+
+        case "partidaIniciada":
+
+            mostrarPartida(
+                data
+            );
+
+            break;
+
+        case "actualizarPuntaje":
+
+            log(
+                `🏆 ${data.jugador} -> ${data.puntajeTotal}`
+            );
+
+            break;
+
+        case "jugadorTermino":
+
+            log(
+                `🏁 ${data.jugador} terminó`
+            );
+
+            break;
+
+        case "resultadoFinal":
+
+            mostrarResultadoFinal(
+                data
+            );
+
+            break;
+
+        case "error":
+
+            alert(
+                data.mensaje
+            );
+
+            break;
+
+        default:
+
+            console.log(
+                "Evento desconocido:",
+                data
+            );
+    }
+}
+
+function mostrarJugadores(jugadores){
+
+    const div =
+        document.getElementById("jugadores");
+
+    div.innerHTML = "";
+
+    jugadores.forEach(
+        (j,index) => {
+
+            div.innerHTML += `
+                <div>
+                    ${index + 1}.
+                    👤 ${j.nombre}
+                    (${j.rol})
+                </div>
+            `;
+        }
+    );
+}
+
+function mostrarCanciones(canciones){
+
+    const tabla =
+        document.getElementById(
+            "tablaCanciones"
+        );
+
+    tabla.innerHTML = "";
+
+    canciones.forEach(c => {
+
+        tabla.innerHTML += `
+        <tr>
+            <td>${c.id}</td>
+            <td>${c.nombre}</td>
+            <td>${c.duracion}</td>
+            <td>${c.dificultad}</td>
+        </tr>
+        `;
+    });
+}
+
+function mostrarPartida(data){
+
+    document
+        .getElementById(
+            "partidaCancion"
+        )
+        .textContent =
+        data.cancion.nombre;
+
+    document
+        .getElementById(
+            "partidaJugadores"
+        )
+        .textContent =
+        data.jugadores
+            .map(j => j.nombre)
+            .join(", ");
+
+    document
+        .getElementById(
+            "partidaNotas"
+        )
+        .textContent =
+        data.notas.length;
+
+    log(
+        `🎵 Partida iniciada`
+    );
+}
+
 function iniciarPartida(){
 
     if(!ws){
-        alert("Conéctate primero");
+
+        alert(
+            "Conéctate primero"
+        );
+
         return;
     }
 
     const cancion =
         Number(
-            document.getElementById("cancion").value
+            document
+            .getElementById(
+                "cancion"
+            ).value
         );
 
     const cantidad =
         Number(
-            document.getElementById("cantidad").value
+            document
+            .getElementById(
+                "cantidad"
+            ).value
         );
 
     const mensaje = {
 
-        eventoCliente:"iniciarPartida",
+        eventoCliente:
+            "iniciarPartida",
 
-        cancion:cancion,
+        cancion:
+            cancion,
 
-        cantidadJugadores:cantidad
+        cantidadJugadores:
+            cantidad
     };
 
     ws.send(
@@ -103,65 +293,165 @@ function iniciarPartida(){
     );
 }
 
-function mostrarJugadores(jugadores){
+function actualizarPuntajeVisual(){
 
-    const div =
-        document.getElementById("jugadores");
-
-    div.innerHTML = "";
-
-    jugadores.forEach(j => {
-
-        div.innerHTML += `
-            <div>
-                👤 ${j.nombre}
-                (${j.rol})
-            </div>
-        `;
-    });
+    document
+        .getElementById(
+            "estadoPuntaje"
+        )
+        .textContent =
+        puntajeActual;
 }
-
-let puntajeActual = 0;
 
 function enviarPerfect(){
 
     puntajeActual += 100;
 
-    const mensaje = {
-        eventoCliente:"puntaje",
-        resultado:"perfect",
-        puntajeTotal:puntajeActual
-    };
+    actualizarPuntajeVisual();
 
-    ws.send(JSON.stringify(mensaje));
-
-    log("➡️ " + JSON.stringify(mensaje));
+    enviarResultado(
+        "perfect"
+    );
 }
 
 function enviarGood(){
 
     puntajeActual += 50;
 
-    const mensaje = {
-        eventoCliente:"puntaje",
-        resultado:"good",
-        puntajeTotal:puntajeActual
-    };
+    actualizarPuntajeVisual();
 
-    ws.send(JSON.stringify(mensaje));
-
-    log("➡️ " + JSON.stringify(mensaje));
+    enviarResultado(
+        "good"
+    );
 }
 
 function enviarMiss(){
 
+    enviarResultado(
+        "miss"
+    );
+}
+
+function enviarResultado(resultado){
+
     const mensaje = {
-        eventoCliente:"puntaje",
-        resultado:"miss",
-        puntajeTotal:puntajeActual
+
+        eventoCliente:
+            "puntaje",
+
+        resultado:
+            resultado,
+
+        puntajeTotal:
+            puntajeActual
     };
 
-    ws.send(JSON.stringify(mensaje));
+    ws.send(
+        JSON.stringify(mensaje)
+    );
 
-    log("➡️ " + JSON.stringify(mensaje));
+    log(
+        "➡️ " +
+        JSON.stringify(mensaje)
+    );
+}
+
+function enviarFinPartida(){
+
+    const mensaje = {
+
+        eventoCliente:
+            "finPartida"
+    };
+
+    ws.send(
+        JSON.stringify(mensaje)
+    );
+
+    log(
+        "➡️ finPartida"
+    );
+}
+
+function mostrarResultadoFinal(data){
+
+    const div =
+        document.getElementById(
+            "resultadoFinal"
+        );
+
+    let html = "";
+
+    html += `
+        <h3>
+            🏆 Ganador:
+            ${data.ganador}
+        </h3>
+    `;
+
+    html += `
+        <table>
+        <tr>
+            <th>Jugador</th>
+            <th>Puntaje</th>
+            <th>Perfect</th>
+            <th>Good</th>
+            <th>Miss</th>
+        </tr>
+    `;
+
+    data.ranking.forEach(j => {
+
+        html += `
+        <tr>
+            <td>${j.nombre}</td>
+            <td>${j.puntaje}</td>
+            <td>${j.perfect}</td>
+            <td>${j.good}</td>
+            <td>${j.miss}</td>
+        </tr>
+        `;
+    });
+
+    html += "</table>";
+
+    div.innerHTML = html;
+}
+
+function continuarJugando(){
+
+    const mensaje = {
+
+        eventoCliente:
+            "continuar"
+    };
+
+    ws.send(
+        JSON.stringify(mensaje)
+    );
+
+    log(
+        "➡️ continuar"
+    );
+
+    puntajeActual = 0;
+
+    actualizarPuntajeVisual();
+}
+
+function salirPartida(){
+
+    const mensaje = {
+
+        eventoCliente:
+            "salir"
+    };
+
+    ws.send(
+        JSON.stringify(mensaje)
+    );
+
+    log(
+        "➡️ salir"
+    );
 }

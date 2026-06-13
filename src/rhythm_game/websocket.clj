@@ -28,7 +28,11 @@
  enviar-resultado-final!
  procesar-fin-partida!
  limpiar-partida!
- finalizar-partida!)
+ agregar-al-final-cola!
+ limpiar-estadisticas-jugador
+ procesar-continuar!
+ procesar-salir!
+ lista-publica-jugadores)
 
 (defn enviar!
   [socket data]
@@ -159,6 +163,7 @@
        socket
        {:eventoServidor "ocupado"}))))
 
+;; PARA MANEJAR CASOS MENSAJES
 (defn manejar-mensaje!
   [socket mensaje]
   (println mensaje)
@@ -181,6 +186,10 @@
       "finPartida"
       (procesar-fin-partida!
        socket)
+      "continuar"
+      (procesar-continuar! socket)
+      "salir"
+      (procesar-salir! socket)
       nil)))
 
 
@@ -256,6 +265,15 @@
        #(= socket (:socket %))
        jugadores)))))
 
+(defn agregar-al-final-cola!
+  [jugador]
+  (swap!
+   estado-servidor
+   update
+   :jugadores
+   conj
+   jugador))
+
 (defn reasignar-admin!
   []
   (let [jugadores
@@ -302,36 +320,67 @@
 
 (defn iniciar-partida!
   [socket cancion-id cantidad]
+
   (let [jugador
         (buscar-jugador-por-socket socket)
+
         jugadores-conectados
-        (count (:jugadores @estado-servidor))]
+        (count
+         (remove
+          :en-partida
+          (:jugadores @estado-servidor)))]
+
     (cond
+
       (not= "admin" (:rol jugador))
       (enviar!
        socket
        {:eventoServidor "error"
         :mensaje "Solo el admin puede iniciar la partida"})
+
       (> cantidad jugadores-conectados)
       (enviar!
        socket
        {:eventoServidor "error"
         :mensaje "No hay suficientes jugadores conectados"})
+
       :else
+
       (let [{:keys [cancion notas jugadores]}
             (crear-partida!
              cancion-id
              cantidad)]
+
+        ;; enviar partida a los jugadores participantes
         (enviar-a-jugadores!
          jugadores
+
          {:eventoServidor "partidaIniciada"
+
           :cancion cancion
+
           :jugadores
           (mapv
            #(select-keys %
                          [:nombre :rol])
            jugadores)
-          :notas notas})))))
+
+          :notas notas})
+
+        ;; actualizar cola para los que NO están jugando
+        (let [esperando
+
+              (remove
+               :en-partida
+               (:jugadores @estado-servidor))]
+
+          (enviar-a-jugadores!
+           esperando
+
+           {:eventoServidor "actualizarJugadores"
+
+            :jugadores
+            (lista-publica-jugadores)}))))))
 
 (defn actualizar-puntaje!
   [nombre resultado puntaje-total]
@@ -400,19 +449,15 @@
 
 (defn todos-terminaron?
   []
-  (let [participantes
-        (set
-         (jugadores-partida))
+  (let [nombres-partida
+        (set (jugadores-partida))
         terminados
         (set
-         (map
-          :nombre
-          (filter
-           :termino
-           (:jugadores @estado-servidor))))]
-    (set/subset?
-     participantes
-     terminados)))
+         (map :nombre
+              (filter
+               #(and (:termino %) (nombres-partida (:nombre %)))
+               (:jugadores @estado-servidor))))]
+    (set/subset? nombres-partida terminados)))
 
 (defn ranking-final
   []
@@ -449,25 +494,25 @@
 
 (defn enviar-resultado-final!
   []
-  (let [ranking
-        (ranking-final)
-        ganador
-        (first ranking)]
-    (broadcast!
+  (let [ranking (ranking-final)
+        ganador (first ranking)
+        participantes
+        (filter :en-partida (:jugadores @estado-servidor))]
+    (enviar-a-jugadores!
+     participantes
      {:eventoServidor "resultadoFinal"
-      :ganador
-      (:nombre ganador)
+      :ganador (:nombre ganador)
       :ranking
       (mapv
-       #(select-keys
-         %
-         [:nombre
-          :puntaje
-          :perfect
-          :good
-          :miss])
+       #(select-keys % [:nombre :puntaje :perfect :good :miss])
        ranking)})
-    (finalizar-partida!)))
+    (limpiar-partida!)
+    (swap!
+     estado-servidor
+     update
+     :jugadores
+     (fn [jugadores]
+       (mapv #(dissoc % :en-partida) jugadores)))))
 
 
 (defn procesar-fin-partida!
@@ -511,10 +556,43 @@
       jugadores)))
   (limpiar-partida!))
 
-(defn finalizar-partida!
-  []
-  (preparar-sala-espera!)
+(defn limpiar-estadisticas-jugador
+  [jugador]
+  (assoc jugador
+         :puntaje 0
+         :perfect 0
+         :good 0
+         :miss 0
+         :termino false))
+
+(defn procesar-continuar!
+  [socket]
+  (let [jugador
+        (buscar-jugador-por-socket socket)
+        jugador-limpio
+        (-> jugador
+            limpiar-estadisticas-jugador
+            (dissoc :en-partida))]
+    (quitar-jugador-por-socket! socket)
+    (agregar-al-final-cola! jugador-limpio)
+    (reasignar-admin!)
+    (broadcast!
+     {:eventoServidor "actualizarJugadores"
+      :jugadores (lista-publica-jugadores)})
+    (enviar!
+     socket
+     {:eventoServidor "salaEspera"})))
+
+(defn procesar-salir!
+  [socket]
+  (quitar-jugador-por-socket! socket)
+  (reasignar-admin!)
   (broadcast!
-   {:eventoServidor "volverSalaEspera"
-    :jugadores
-    (lista-publica-jugadores)}))
+   {:eventoServidor "actualizarJugadores"
+    :jugadores (lista-publica-jugadores)}))
+
+(defn lista-publica-jugadores
+  []
+  (mapv
+   #(select-keys % [:nombre :rol])
+   (remove :en-partida (:jugadores @estado-servidor))))

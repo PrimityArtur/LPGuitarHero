@@ -2,35 +2,118 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Rhythm Game Test Client</title>
+<title>Rhythm Game Backend Tester</title>
 
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="/css/style.css">
+
 </head>
 
 <body>
 
 <div class="container">
 
-    <h1>🎵 Rhythm Game Test Client</h1>
+    <h1>🎵 Rhythm Game Backend Tester</h1>
 
-    <div class="card">
+    <div class="grid">
 
-        <h3>Conexión</h3>
+        <!-- CONEXION -->
+        <div class="card">
 
-        <input
-            id="nombre"
-            type="text"
-            placeholder="Nombre jugador">
+            <h3 class="section-title">
+                Conexión
+            </h3>
 
-        <button onclick="conectar()">
-            Conectar
-        </button>
+            <input
+                id="nombre"
+                type="text"
+                placeholder="Nombre jugador">
+
+            <button onclick="conectar()">
+                Conectar
+            </button>
+
+        </div>
+
+        <!-- ESTADO -->
+        <div class="card">
+
+            <h3 class="section-title">
+                Estado Jugador
+            </h3>
+
+            <div class="info">
+
+                <div>
+                    Nombre:
+                    <span id="estadoNombre">-</span>
+                </div>
+
+                <div>
+                    Rol:
+                    <span id="estadoRol">-</span>
+                </div>
+
+                <div>
+                    Puntaje:
+                    <span id="estadoPuntaje">0</span>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
 
+    <!-- COLA -->
+
     <div class="card">
 
-        <h3>Iniciar Partida</h3>
+        <h3>
+            Cola de Espera
+        </h3>
+
+        <div id="jugadores">
+            Sin jugadores
+        </div>
+
+    </div>
+
+    <!-- CANCIONES -->
+
+    <div class="card">
+
+        <h3>
+            Canciones Disponibles
+        </h3>
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Duración</th>
+                <th>Dificultad</th>
+            </tr>
+
+            </thead>
+
+            <tbody id="tablaCanciones">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <!-- INICIAR PARTIDA -->
+
+    <div class="card">
+
+        <h3>
+            Iniciar Partida
+        </h3>
 
         <input
             id="cancion"
@@ -42,7 +125,7 @@
             id="cantidad"
             type="number"
             value="2"
-            placeholder="Jugadores">
+            placeholder="Cantidad Jugadores">
 
         <button onclick="iniciarPartida()">
             Iniciar Partida
@@ -50,9 +133,48 @@
 
     </div>
 
+    <!-- PARTIDA -->
+
     <div class="card">
 
-        <h3>Simular Puntajes</h3>
+        <h3>
+            Partida Actual
+        </h3>
+
+        <div class="info">
+
+            <div>
+                Canción:
+                <span id="partidaCancion">
+                    Ninguna
+                </span>
+            </div>
+
+            <div>
+                Jugadores:
+                <span id="partidaJugadores">
+                    -
+                </span>
+            </div>
+
+            <div>
+                Notas:
+                <span id="partidaNotas">
+                    0
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SIMULADOR -->
+
+    <div class="card">
+
+        <h3>
+            Simular Juego
+        </h3>
 
         <button onclick="enviarPerfect()">
             Perfect (+100)
@@ -66,29 +188,57 @@
             Miss (0)
         </button>
 
+        <button onclick="enviarFinPartida()">
+            Fin Partida
+        </button>
+
     </div>
+
+    <!-- RESULTADOS -->
 
     <div class="card">
 
-        <h3>Jugadores</h3>
+        <h3>
+            Resultado Final
+        </h3>
 
-        <div id="jugadores">
-            Sin jugadores
+        <div
+            id="resultadoFinal"
+            class="resultado">
+
+            Esperando resultado...
+
         </div>
 
+        <br>
+
+        <button onclick="continuarJugando()">
+            Continuar Jugando
+        </button>
+
+        <button onclick="salirPartida()">
+            Salir
+        </button>
+
     </div>
+
+    <!-- LOG -->
 
     <div class="card">
 
-        <h3>Mensajes</h3>
+        <h3>
+            Consola JSON
+        </h3>
 
-        <div id="log"></div>
+        <div id="log">
+
+        </div>
 
     </div>
 
 </div>
 
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
 
 </body>
 </html>
