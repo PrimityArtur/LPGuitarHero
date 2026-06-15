@@ -1,7 +1,20 @@
 [
-  {"tiempo":1000,"direccion":"arriba"},
-  {"tiempo":1500,"direccion":"izquierda"},
-  {"tiempo":2000,"direccion":"abajo"},
-  {"tiempo":2500,"direccion":"derecha"},
-  {"tiempo":3000,"direccion":"arriba"}
+  {"tiempo": 5000, "direccion": "izquierda"}, {"tiempo": 5000, "direccion": "arriba"}, {"tiempo": 5000, "direccion": "abajo"}, {"tiempo": 5000, "direccion": "derecha"},
+  {"tiempo": 7000, "direccion": "izquierda"}, {"tiempo": 7000, "direccion": "arriba"}, {"tiempo": 7000, "direccion": "abajo"}, {"tiempo": 7000, "direccion": "derecha"},
+  {"tiempo": 9000, "direccion": "izquierda"}, {"tiempo": 9000, "direccion": "arriba"}, {"tiempo": 9000, "direccion": "abajo"}, {"tiempo": 9000, "direccion": "derecha"},
+  {"tiempo": 11000, "direccion": "izquierda"}, {"tiempo": 11000, "direccion": "arriba"}, {"tiempo": 11000, "direccion": "abajo"}, {"tiempo": 11000, "direccion": "derecha"},
+  {"tiempo": 13000, "direccion": "izquierda"}, {"tiempo": 13000, "direccion": "arriba"}, {"tiempo": 13000, "direccion": "abajo"}, {"tiempo": 13000, "direccion": "derecha"},
+  {"tiempo": 15000, "direccion": "izquierda"}, {"tiempo": 15000, "direccion": "arriba"}, {"tiempo": 15000, "direccion": "abajo"}, {"tiempo": 15000, "direccion": "derecha"},
+  {"tiempo": 17000, "direccion": "izquierda"}, {"tiempo": 17000, "direccion": "arriba"}, {"tiempo": 17000, "direccion": "abajo"}, {"tiempo": 17000, "direccion": "derecha"},
+  {"tiempo": 19000, "direccion": "izquierda"}, {"tiempo": 19000, "direccion": "arriba"}, {"tiempo": 19000, "direccion": "abajo"}, {"tiempo": 19000, "direccion": "derecha"},
+  {"tiempo": 21000, "direccion": "izquierda"}, {"tiempo": 21000, "direccion": "arriba"}, {"tiempo": 21000, "direccion": "abajo"}, {"tiempo": 21000, "direccion": "derecha"},
+  {"tiempo": 23000, "direccion": "izquierda"}, {"tiempo": 23000, "direccion": "arriba"}, {"tiempo": 23000, "direccion": "abajo"}, {"tiempo": 23000, "direccion": "derecha"},
+  {"tiempo": 25000, "direccion": "izquierda"}, {"tiempo": 25000, "direccion": "arriba"}, {"tiempo": 25000, "direccion": "abajo"}, {"tiempo": 25000, "direccion": "derecha"},
+  {"tiempo": 27000, "direccion": "izquierda"}, {"tiempo": 27000, "direccion": "arriba"}, {"tiempo": 27000, "direccion": "abajo"}, {"tiempo": 27000, "direccion": "derecha"},
+  {"tiempo": 29000, "direccion": "izquierda"}, {"tiempo": 29000, "direccion": "arriba"}, {"tiempo": 29000, "direccion": "abajo"}, {"tiempo": 29000, "direccion": "derecha"},
+  {"tiempo": 31000, "direccion": "izquierda"}, {"tiempo": 31000, "direccion": "arriba"}, {"tiempo": 31000, "direccion": "abajo"}, {"tiempo": 31000, "direccion": "derecha"},
+  {"tiempo": 33000, "direccion": "izquierda"}, {"tiempo": 33000, "direccion": "arriba"}, {"tiempo": 33000, "direccion": "abajo"}, {"tiempo": 33000, "direccion": "derecha"},
+  {"tiempo": 35000, "direccion": "izquierda"}, {"tiempo": 35000, "direccion": "arriba"}, {"tiempo": 35000, "direccion": "abajo"}, {"tiempo": 35000, "direccion": "derecha"},
+  {"tiempo": 37000, "direccion": "izquierda"}, {"tiempo": 37000, "direccion": "arriba"}, {"tiempo": 37000, "direccion": "abajo"}, {"tiempo": 37000, "direccion": "derecha"},
+  {"tiempo": 39000, "direccion": "izquierda"}, {"tiempo": 39000, "direccion": "arriba"}
 ]

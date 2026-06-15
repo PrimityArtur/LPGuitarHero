@@ -1,244 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Rhythm Game Backend Tester</title>
-
-<link rel="stylesheet" href="/css/style.css">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhythm Game - Pixel Art</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/logStyle.css">
 </head>
-
 <body>
 
-<div class="container">
-
-    <h1>🎵 Rhythm Game Backend Tester</h1>
-
-    <div class="grid">
-
-        <!-- CONEXION -->
-        <div class="card">
-
-            <h3 class="section-title">
-                Conexión
-            </h3>
-
-            <input
-                id="nombre"
-                type="text"
-                placeholder="Nombre jugador">
-
-            <button onclick="conectar()">
-                Conectar
-            </button>
-
-        </div>
-
-        <!-- ESTADO -->
-        <div class="card">
-
-            <h3 class="section-title">
-                Estado Jugador
-            </h3>
-
-            <div class="info">
-
-                <div>
-                    Nombre:
-                    <span id="estadoNombre">-</span>
-                </div>
-
-                <div>
-                    Rol:
-                    <span id="estadoRol">-</span>
-                </div>
-
-                <div>
-                    Puntaje:
-                    <span id="estadoPuntaje">0</span>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- COLA -->
-
-    <div class="card">
-
-        <h3>
-            Cola de Espera
-        </h3>
-
-        <div id="jugadores">
-            Sin jugadores
-        </div>
-
-    </div>
-
-    <!-- CANCIONES -->
-
-    <div class="card">
-
-        <h3>
-            Canciones Disponibles
-        </h3>
-
-        <table>
-
-            <thead>
-
-            <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Duración</th>
-                <th>Dificultad</th>
-            </tr>
-
-            </thead>
-
-            <tbody id="tablaCanciones">
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    <!-- INICIAR PARTIDA -->
-
-    <div class="card">
-
-        <h3>
-            Iniciar Partida
-        </h3>
-
-        <input
-            id="cancion"
-            type="number"
-            value="1"
-            placeholder="ID Canción">
-
-        <input
-            id="cantidad"
-            type="number"
-            value="2"
-            placeholder="Cantidad Jugadores">
-
-        <button onclick="iniciarPartida()">
-            Iniciar Partida
-        </button>
-
-    </div>
-
-    <!-- PARTIDA -->
-
-    <div class="card">
-
-        <h3>
-            Partida Actual
-        </h3>
-
-        <div class="info">
-
-            <div>
-                Canción:
-                <span id="partidaCancion">
-                    Ninguna
-                </span>
-            </div>
-
-            <div>
-                Jugadores:
-                <span id="partidaJugadores">
-                    -
-                </span>
-            </div>
-
-            <div>
-                Notas:
-                <span id="partidaNotas">
-                    0
-                </span>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- SIMULADOR -->
-
-    <div class="card">
-
-        <h3>
-            Simular Juego
-        </h3>
-
-        <button onclick="enviarPerfect()">
-            Perfect (+100)
-        </button>
-
-        <button onclick="enviarGood()">
-            Good (+50)
-        </button>
-
-        <button onclick="enviarMiss()">
-            Miss (0)
-        </button>
-
-        <button onclick="enviarFinPartida()">
-            Fin Partida
-        </button>
-
-    </div>
-
-    <!-- RESULTADOS -->
-
-    <div class="card">
-
-        <h3>
-            Resultado Final
-        </h3>
-
-        <div
-            id="resultadoFinal"
-            class="resultado">
-
-            Esperando resultado...
-
-        </div>
-
-        <br>
-
-        <button onclick="continuarJugando()">
-            Continuar Jugando
-        </button>
-
-        <button onclick="salirPartida()">
-            Salir
-        </button>
-
-    </div>
-
-    <!-- LOG -->
-
-    <div class="card">
-
-        <h3>
-            Consola JSON
-        </h3>
-
-        <div id="log">
-
-        </div>
-
-    </div>
-
-</div>
-
-<script src="/js/main.js"></script>
-
+    <canvas id="gameCanvas" width="1920" height="1080"></canvas>
+
+    <div id="logContainer" class="log-container"></div>
+
+
+    <script src="js/logsClass.js"></script>
+    <script src="js/ImageClass.js"></script>
+    <script src="js/TextoPixelArtClass.js"></script> 
+    <script src="js/BotonClass.js"></script>
+    <script src="js/TextFieldClass.js"></script>
+
+    
+    <script src="js/ListaCancionesClass.js"></script>
+    <script src="js/NumeroJugadoresClass.js"></script>
+    <script src="js/ListaJugadoresClass.js"></script>
+    <script src="js/ConfigPlayersClass.js"></script>
+    
+    <script src="js/CaidaFlechaClass.js"></script>
+    <script src="js/TableroClass.js"></script>
+    <script src="js/HeaderIniciarJuegoClass.js"></script>
+    
+    <script src="js/ScoreFinalJugador.js"></script>
+    
+
+
+    <script src="js/PantallaLoginClass.js"></script>
+    <script src="js/SalaEsperaClass.js"></script>
+    <script src="js/JuegoIniciadoClass.js"></script>
+    <script src="js/FinPartidaClass.js"></script>
+
+     
+    <script src="js/GameControllerClass.js"></script>
+    <script src="js/ConexionClass.js"></script> 
+    <script src="js/main.js"></script>
 </body>
 </html>

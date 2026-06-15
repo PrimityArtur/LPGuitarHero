@@ -445,3 +445,545 @@ clj꞉rhythm-game.core꞉> 
 clj꞉rhythm-game.core꞉> 
 (def servidor-local (-main))
 clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(servidor-local)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:61:31).
+; Unable to resolve symbol: servidor-local in this context
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(detener-servidor!)
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:75:3).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+reiniciar-todo-desde-cero!
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:0:0).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:78:3).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:78:3).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:78:3).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero! []
+    ;; apagamos el servidor
+    (detener-servidor!)
+
+    ;; obtenemos el estado y lo vaciamos 
+    (require '[rhythm-game.state :refer [estado-servidor]])
+    (reset! estado-servidor {:jugadores [] :partida nil})
+
+    ;; levantar el servidor
+    (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:74:5).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:78:3).
+; Unable to resolve symbol: reiniciar-todo-desde-cero! in this context
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero! []
+    ;; apagamos el servidor
+    (detener-servidor!)
+
+    ;; obtenemos el estado y lo vaciamos 
+    (require '[rhythm-game.state :refer [estado-servidor]])
+    (reset! estado-servidor {:jugadores [] :partida nil})
+
+    ;; levantar el servidor
+    (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:74:5).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Execution error (IllegalStateException) at rhythm-game.core/eval11483 (core.clj:78).
+; Attempting to call unbound fn: #'rhythm-game.core/reiniciar-todo-desde-cero!
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero! []
+    ;; apagamos el servidor
+    (detener-servidor!)
+
+    ;; obtenemos el estado y lo vaciamos 
+    (require '[rhythm-game.state :refer [estado-servidor]])
+    (reset! estado-servidor {:jugadores [] :partida nil})
+
+    ;; levantar el servidor
+    (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:74:5).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero! []
+    ;; apagamos el servidor
+    (detener-servidor!)
+
+    ;; obtenemos el estado y lo vaciamos 
+    (require '[rhythm-game.state :refer [estado-servidor]])
+    (reset! estado-servidor {:jugadores [] :partida nil})
+
+    ;; levantar el servidor
+    (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:74:5).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero! []
+    ;; apagamos el servidor
+    (detener-servidor!)
+
+    ;; obtenemos el estado y lo vaciamos 
+    (require '[rhythm-game.state :refer [estado-servidor]])
+    (reset! estado-servidor {:jugadores [] :partida nil})
+
+    ;; levantar el servidor
+    (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:74:5).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(reiniciar-todo-desde-cero!)
+; Execution error (IllegalStateException) at rhythm-game.core/eval11485 (core.clj:80).
+; Attempting to call unbound fn: #'rhythm-game.core/reiniciar-todo-desde-cero!
+clj꞉rhythm-game.core꞉> 
+(defn reiniciar-todo-desde-cero!
+  "Apaga el servidor, limpia el átomo de estado y vuelve a encenderlo."
+  []
+  ;; 1. Apagamos el servidor local [cite: 2]
+  (detener-servidor!)
+
+  ;; 2. Requerimos el estado y lo regresamos a su punto cero [cite: 11]
+  (require '[rhythm-game.state :refer [estado-servidor]])
+  (reset! estado-servidor {:jugadores [] :partida nil})
+
+  ;; 3. Volvemos a levantar el servidor limpio [cite: 2]
+  (iniciar-servidor!))
+; Syntax error compiling at (e:\UCSP\UCSP_LP\Proyecto\LPGuitarHero\rhythm_game\src\rhythm_game\core.clj:65:3).
+; Unable to resolve symbol: estado-servidor in this context
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+; Execution error (BindException) at sun.nio.ch.Net/bind0 (Net.java:-2).
+; Address already in use: bind
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(comment
+  ;; ENCENDER el servidor en tu com
+  ;; alt + Enter sobre (servidor-local) para ejecutar el server local
+  ;; si se desea hacer cambias en la funcion agregada o cambiada se debe hacer Alt+Enter en dicha funcion cambiada y ya se refleja los cambios 
+  (def servidor-local (-main))
+
+  (reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil}))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(comment
+  ;; ENCENDER el servidor en tu com
+  ;; alt + Enter sobre (servidor-local) para ejecutar el server local
+  ;; si se desea hacer cambias en la funcion agregada o cambiada se debe hacer Alt+Enter en dicha funcion cambiada y ya se refleja los cambios 
+  (def servidor-local (-main))
+
+  (reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil}))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(when-let [requires (resolve 'clojure.main/repl-requires)] (clojure.core/apply clojure.core/require @requires))
+clj꞉rhythm-game.core꞉> 
+(def servidor-local (-main))
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 
+(reset! rhythm-game.state/estado-servidor {:jugadores [] :partida nil})
+clj꞉rhythm-game.core꞉> 

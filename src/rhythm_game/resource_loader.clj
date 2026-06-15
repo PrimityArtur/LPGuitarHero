@@ -10,7 +10,7 @@
 
 (defn cargar-catalogo
   []
-  (leer-json "catalogo.json"))
+  (leer-json "public/catalogo.json"))
 
 (defn cargar-notas
   [archivo]
