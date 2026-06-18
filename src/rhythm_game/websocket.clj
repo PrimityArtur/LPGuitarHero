@@ -5,6 +5,7 @@
    [rhythm-game.messages :refer [->json <-json]]
    [rhythm-game.songs :refer [canciones]]
    [rhythm-game.game :refer [crear-partida!]]
+   [rhythm-game.state-manager :as sm]
    [clojure.set :as set]))
 
 
@@ -78,22 +79,23 @@
   (if (empty? (:jugadores @estado-servidor))
     "admin"
     "usuario"))
+
 (defn agregar-jugador!
   [nombre socket]
 
   (let [rol (asignar-rol)
 
-        jugador (assoc
-                 (crear-jugador nombre socket)
-                 :rol rol)]
+        jugador
+        (assoc
+         (crear-jugador nombre socket)
+         :rol rol)]
 
-    (swap! estado-servidor
-           update
-           :jugadores
-           conj
-           jugador)
+    (send estado-servidor
+          sm/agregar-jugador
+          jugador)
 
     jugador))
+
 (defn lista-publica-jugadores
   []
   (mapv
@@ -223,75 +225,33 @@
 
 (defn reconectar-jugador!
   [nombre socket]
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   (fn [jugadores]
-     (mapv
-      (fn [jugador]
-        (if (= nombre (:nombre jugador))
-          (assoc jugador
-                 :socket socket
-                 :conectado true)
-          jugador))
-      jugadores))))
+  (send estado-servidor
+        sm/reconectar-jugador
+        nombre
+        socket))
 
 (defn marcar-desconectado!
   [socket]
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   (fn [jugadores]
-     (mapv
-      (fn [jugador]
-        (if (= socket (:socket jugador))
-          (assoc jugador
-                 :socket nil
-                 :conectado false)
-          jugador))
-      jugadores))))
+  (send estado-servidor
+        sm/marcar-desconectado
+        socket))
 
 (defn quitar-jugador-por-socket!
   [socket]
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   (fn [jugadores]
-     (vec
-      (remove
-       #(= socket (:socket %))
-       jugadores)))))
+  (send estado-servidor
+        sm/quitar-jugador
+        socket))
 
 (defn agregar-al-final-cola!
   [jugador]
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   conj
-   jugador))
+  (send estado-servidor
+        sm/agregar-al-final
+        jugador))
 
 (defn reasignar-admin!
   []
-  (let [jugadores
-        (:jugadores @estado-servidor)]
-    (when (seq jugadores)
-      (swap!
-       estado-servidor
-       assoc
-       :jugadores
-       (vec
-        (map-indexed
-         (fn [indice jugador]
-           (assoc jugador
-                  :rol
-                  (if (= indice 0)
-                    "admin"
-                    "usuario")))
-         jugadores))))))
+  (send estado-servidor
+        sm/reasignar-admin))
 
 (defn enviar-canciones!
   [socket]
@@ -384,37 +344,17 @@
 
 (defn actualizar-puntaje!
   [nombre resultado puntaje-total]
-  (let [campo
-        (keyword resultado)]
-    (swap!
-     estado-servidor
-     update
-     :jugadores
-     (fn [jugadores]
-       (mapv
-        (fn [jugador]
-          (if (= nombre (:nombre jugador))
-            (-> jugador
-                (assoc :puntaje puntaje-total)
-                (update campo
-                        (fnil inc 0)))
-            jugador))
-        jugadores)))))
+  (send estado-servidor
+        sm/actualizar-puntaje
+        nombre
+        resultado
+        puntaje-total))
 
 (defn marcar-terminado!
   [nombre]
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   (fn [jugadores]
-     (mapv
-      (fn [jugador]
-        (if (= nombre (:nombre jugador))
-          (assoc jugador
-                 :termino true)
-          jugador))
-      jugadores))))
+  (send estado-servidor
+        sm/marcar-terminado
+        nombre))
 
 
 (defn broadcast-puntaje!
@@ -473,24 +413,9 @@
 
 (defn mover-jugador-al-final!
   [nombre]
-  (let [jugadores
-        (:jugadores @estado-servidor)
-        jugador
-        (first
-         (filter
-          #(= nombre (:nombre %))
-          jugadores))
-        restantes
-        (remove
-         #(= nombre (:nombre %))
-         jugadores)]
-    (swap!
-     estado-servidor
-     assoc
-     :jugadores
-     (vec
-      (concat restantes
-              [jugador])))))
+  (send estado-servidor
+        sm/mover-jugador-al-final
+        nombre))
 
 (defn enviar-resultado-final!
   []
@@ -533,28 +458,13 @@
 
 (defn limpiar-partida!
   []
-  (swap!
-   estado-servidor
-   assoc
-   :partida nil))
+  (send estado-servidor
+        sm/limpiar-partida))
 
 (defn preparar-sala-espera!
   []
-  (swap!
-   estado-servidor
-   update
-   :jugadores
-   (fn [jugadores]
-     (mapv
-      (fn [jugador]
-        (assoc jugador
-               :puntaje 0
-               :perfect 0
-               :good 0
-               :miss 0
-               :termino false))
-      jugadores)))
-  (limpiar-partida!))
+  (send estado-servidor
+        sm/preparar-sala-espera))
 
 (defn limpiar-estadisticas-jugador
   [jugador]
