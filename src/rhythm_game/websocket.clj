@@ -220,20 +220,27 @@
         (broadcast! {:eventoServidor "actualizarJugadores"
                      :jugadores (lista-publica-jugadores)
                      :espectadores (cantidad-espectadores)}))
-
       (and (not (:conectado jugador-existente)) (partida-activa?))
       (do
         (reconectar-jugador! nombre socket)
         (await estado-servidor)
         (let [partida (:partida @estado-servidor)
+              tiempo-actual (- (System/currentTimeMillis)
+                               (:timestamp-inicio partida))
               jugador (buscar-jugador nombre)
-              en-partida? (:en-partida jugador)]
+              en-partida? (:en-partida jugador)]  
+          
           (if en-partida?
             (do
               (enviar! socket {:eventoServidor "reconexionExitosa"
+                               :tiempoActual tiempo-actual
                                :cancion (:cancion partida)
                                :notas (:notas partida)
-                               :jugadores (:jugadores-partida partida)
+                               :jugadores
+                               (mapv
+                                #(select-keys % [:nombre :rol])
+                                (filter :en-partida
+                                        (:jugadores @estado-servidor)))
                                :puntajes
                                (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
                                      (filter #(contains? (set (:jugadores-partida partida))
@@ -369,6 +376,13 @@
                            (dissoc :en-partida))]
     (quitar-agregar-reasignar! jugador-limpio socket)
     (await estado-servidor)
+    (let [nuevo-admin
+          (first (filter #(= "admin" (:rol %))
+                         (:jugadores @estado-servidor)))]
+    
+      (when nuevo-admin
+        (enviar-canciones! (:socket nuevo-admin))))
+    
     (broadcast! {:eventoServidor "actualizarJugadores"
                  :jugadores (lista-publica-jugadores)
                  :espectadores (cantidad-espectadores)})

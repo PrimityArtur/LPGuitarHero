@@ -47,7 +47,7 @@ class JuegoIniciadoClass {
     }
 
     // RECIBE EL JSON partidaIniciada
-    iniciarPartida(dataPartida, miNombre) {
+    iniciarPartida(dataPartida, miNombre, tiempoActual = 0) {
         const jugadores = dataPartida.jugadores;
         const notas = dataPartida.notas;
         
@@ -90,8 +90,10 @@ class JuegoIniciadoClass {
             }
         }
 
-        // reiniciar reloj de la cancion
-        this.tiempoInicio = Date.now();
+        // Sincronizar el reloj con el servidor.
+        // Si es una partida nueva, tiempoActual será 0.
+        // Si es una reconexión, continuará desde donde va la canción.
+        this.tiempoInicio = Date.now() - tiempoActual;
         this.enPartida = true;
     }
 
@@ -155,6 +157,34 @@ class JuegoIniciadoClass {
         }
 
         return eventosDisparados;
+    }
+    
+    restaurarPuntajes(puntajes) {
+
+        if (!puntajes) return;
+
+        // tablero local
+        const miInfo = puntajes.find(
+            p => p.nombre === this.tableroLocal.nombreJugador
+        );
+
+        if (miInfo) {
+            this.tableroLocal.puntaje = miInfo.puntaje;
+        }
+
+        // tableros remotos
+        for (const tablero of this.tablerosRemotos) {
+
+            const info = puntajes.find(
+                p => p.nombre === tablero.nombreJugador
+            );
+
+            if (info) {
+                tablero.puntaje = info.puntaje;
+            }
+
+        }
+
     }
 
     // DIBUJAR

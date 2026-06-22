@@ -18,7 +18,7 @@
    (:jugadores @estado-servidor)))
 
 (defn actualizar-estado-partida
-  [estado jugadores esperando cancion notas]
+  [estado jugadores esperando cancion notas timestamp-inicio]
   (assoc estado
          :jugadores
          (vec
@@ -27,6 +27,7 @@
            esperando))
          :partida
          {:activa true
+          :timestamp-inicio timestamp-inicio
           :cancion cancion
           :notas notas
           :jugadores-partida (mapv :nombre jugadores)
@@ -38,13 +39,15 @@
         notas (cargar-notas (:archivoNotas cancion))
         todos (:jugadores @estado-servidor)
         jugadores (vec (take cantidad todos))
-        esperando (vec (drop cantidad todos))]
+        esperando (vec (drop cantidad todos))
+        timestamp-inicio (System/currentTimeMillis)]
     (send estado-servidor
           actualizar-estado-partida
           jugadores
           esperando
           cancion
-          notas)
+          notas
+          timestamp-inicio)
     {:cancion cancion
      :notas notas
      :jugadores jugadores}))

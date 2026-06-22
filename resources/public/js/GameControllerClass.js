@@ -50,14 +50,14 @@ class GameControllerClass {
             console.log("[JUEGO] [Login] Nombre Ocupado. Limpiando input");
             this.pantallaLogin.inputNombre.limpiarTexto();
         };
-        
-        this.red.onReconexionExitosa = (data) => {
 
+        this.red.onReconexionExitosa = (data) => {
             console.log("[JUEGO] Reconexion exitosa");
 
             this.estadoActual = "JUEGO";
 
-            this.juegoIniciado.iniciarPartida(data, this.red.nombreJugador);
+            this.juegoIniciado.iniciarPartida(data, this.red.nombreJugador, data.tiempoActual);
+            this.juegoIniciado.restaurarPuntajes(data.puntajes);
 
         };
 
