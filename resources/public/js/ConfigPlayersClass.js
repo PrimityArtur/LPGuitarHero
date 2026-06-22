@@ -98,9 +98,9 @@ class ConfigPlayersClass {
 
         // para verificar clic en la seleccion de jugadores
         const resNumeros = this.numeroJugadores.obtenerClic(mouseX, mouseY);
-        if (resNumeros !== null) {
-            console.log(`[ConfigPlayersClass] cantidad seleccionada: ${resNumeros}`);
-            return null; // no activar el inicio de partida de abajo 
+        if (resNumeros !== null) 
+        {
+            return {tipo: "configuracionSala", cantidad: resNumeros};
         }
 
         // para verificar clic en boton iniciar
@@ -112,7 +112,9 @@ class ConfigPlayersClass {
         }
         return null;
     }
-
+    seleccionarCantidad(cantidad) {
+        this.numeroJugadores.seleccionarCantidad(cantidad);
+    }
     // DRAW    
     draw(ctx) {
         if (this.cargarCotenido !== true) return;

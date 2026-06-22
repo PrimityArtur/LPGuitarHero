@@ -117,6 +117,17 @@ class NumeroJugadoresClass {
         }
         return null;
     }
+    seleccionarCantidad(cantidad) 
+    {
+        this.limpiarIdxPermantHovered();
+        if (cantidad == null) return;
+        const idx = cantidad - 1;
+        if (idx >= 0 && idx < this.jugadoresDisponibles) 
+        {
+            this.idxPermantHovered = idx;
+            this._setIdxPermantHovered(idx, true);
+        }
+    }
 
     // MOUSE
     // para colision en los botones

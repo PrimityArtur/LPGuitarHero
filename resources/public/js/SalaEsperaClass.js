@@ -40,23 +40,52 @@ class SalaEsperaClass {
         if (!this.isAdmin) return null;
 
         // verificar y para setear idxPermantHovered (id de cancion) en la cancion seleccionada
-        this.listaCanciones.obtenerClic(mouseX, mouseY);
+        // ¿Se seleccionó una canción?
+        const idCancion = this.listaCanciones.obtenerClic(mouseX, mouseY);
+        console.log("IDCANCION =", idCancion);
+        if (idCancion !== null) 
+        {
+            return {tipo: "configuracionSala",
+                    idCancion: idCancion,
+                    cantidad: this.configPlayers.getNumeroJugadoresClass().getSeleccion()};
+        }
 
         // verificar si se presiono Iniciar Partida
-        const cantidadJugadores = this.configPlayers.obtenerClic(mouseX, mouseY);
-        
-        if (cantidadJugadores !== null) {
+        const resConfig = this.configPlayers.obtenerClic(mouseX, mouseY);
+
+        if (resConfig && resConfig.tipo === "configuracionSala") {
+
             let idCancionSel = null;
-            
-            // obtener cancion seleccionada idxPermantHovered de la lista
+
             if (this.listaCanciones.idxPermantHovered !== null) {
-                idCancionSel = this.listaCanciones.items[this.listaCanciones.idxPermantHovered].data.id;
+                idCancionSel =
+                    this.listaCanciones.items[
+                        this.listaCanciones.idxPermantHovered
+                    ].data.id;
+            }
+
+            return {
+                tipo: "configuracionSala",
+                idCancion: idCancionSel,
+                cantidad: resConfig.cantidad
+            };
+        }
+
+        if (typeof resConfig === "number") {
+
+            let idCancionSel = null;
+
+            if (this.listaCanciones.idxPermantHovered !== null) {
+                idCancionSel =
+                    this.listaCanciones.items[
+                        this.listaCanciones.idxPermantHovered
+                    ].data.id;
             }
 
             return {
                 tipo: "iniciarPartida",
                 idCancion: idCancionSel,
-                cantidad: cantidadJugadores
+                cantidad: resConfig
             };
         }
         

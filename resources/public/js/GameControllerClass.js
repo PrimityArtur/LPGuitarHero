@@ -52,8 +52,13 @@ class GameControllerClass {
         };
         
         this.red.onReconexionExitosa = (data) => {
-            console.log("[JUEGO] Reconexion exitosa a la partida");
+
+            console.log("[JUEGO] Reconexion exitosa");
+
             this.estadoActual = "JUEGO";
+
+            this.juegoIniciado.iniciarPartida(data, this.red.nombreJugador);
+
         };
 
         // recibir actualizacion de jugadores se envia a la sala de espera
@@ -66,6 +71,12 @@ class GameControllerClass {
         // recibir catalogo de canciones se envia a la sala de espera
         this.red.onListaCanciones = (canciones) => {
             this.salaEspera.getListaCancionesClass().cargarCanciones(canciones);
+        };
+
+        this.red.onConfiguracionSala = (data) => {
+            const sala = this.salaEspera;
+            sala.getListaCancionesClass().seleccionarCancion(data.cancionId);
+            sala.getConfigPlayersClass().seleccionarCantidad(data.cantidadJugadores);
         };
         
         // recibir json partida
@@ -139,7 +150,12 @@ class GameControllerClass {
             }
         } else if (this.estadoActual === "SALA_ESPERA") {
             const resSala = this.salaEspera.obtenerClic(mouseX, mouseY);
-            
+
+            if (resSala && resSala.tipo === "configuracionSala") 
+            {
+                this.red.enviarConfiguracionSala(resSala.idCancion, resSala.cantidad);
+                return;
+            }
             // si admin apreto boton de iniciar con cancion y n jugadores
             if (resSala && resSala.tipo === "iniciarPartida") {
                 if (resSala.idCancion === null) {

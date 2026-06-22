@@ -134,3 +134,11 @@
                          :termino false)
                  jugadores)))
       (assoc :partida nil)))
+
+(defn actualizar-configuracion-sala
+  [estado cancion-id cantidad-jugadores]
+
+  (assoc estado
+         :configuracion-sala
+         {:cancion-id cancion-id
+          :cantidad-jugadores cantidad-jugadores}))

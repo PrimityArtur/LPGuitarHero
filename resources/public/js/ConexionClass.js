@@ -10,6 +10,9 @@ class ConexionClass {
         this.onActualizarJugadores = null;
         this.onListaCanciones = null;
         this.onPartidaIniciada = null;
+
+        this.onConfiguracionSala = null;
+
         this.onActualizarPuntaje = null;
         this.onJugadorTermino = null;
         this.onResultadoFinal = null;
@@ -72,6 +75,9 @@ class ConexionClass {
                 break;
             case "listaCanciones":
                 this.onListaCanciones(data.canciones);
+                break;
+            case "configuracionSala":
+                this.onConfiguracionSala(data);
                 break;
             case "partidaIniciada":
                 this.logger.print(`🎵 Partida iniciada`);
@@ -149,5 +155,12 @@ class ConexionClass {
             eventoCliente: "salir"
         });
         this.logger.print("➡️ salir");
+    }
+    enviarConfiguracionSala(cancionId, cantidadJugadores) {
+        this.enviar({
+            eventoCliente: "configuracionSala",
+            cancionId: cancionId,
+            cantidadJugadores: cantidadJugadores
+        });
     }
 }

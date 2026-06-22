@@ -11,13 +11,10 @@
   [req]
   (let [uri (:uri req)]
     (case uri
-
       "/ws"
       (ws-handler req)
-
       "/"
       (resp/resource-response "public/index.html")
-
       (or (resp/resource-response (subs uri 1)
                                   {:root "public"}) ;; js, css
           {:status 404 :body "File no Found"}))))

@@ -147,6 +147,20 @@ class ListaCancionesClass {
             console.log(`se mprime ${idx}`)
         }
     }
+    seleccionarCancion(idCancion) 
+    {
+        this._setIdxPermantHovered(this.idxPermantHovered, false);
+        this.idxPermantHovered = null;
+        for (let i = 0; i < this.items.length; i++) 
+        {
+            if (this.items[i].data.id === idCancion) 
+            {
+                this.idxPermantHovered = i;
+                this._setIdxPermantHovered(i, true);
+                break;
+            }
+        }
+    }
 
     // MOUSE
     // cambiar el color de la cancion si se pasa el mause

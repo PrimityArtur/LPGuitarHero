@@ -3,4 +3,7 @@
 (def estado-servidor
   (agent
    {:jugadores []
-    :partida nil}))
+    :partida nil 
+    :configuracion-sala
+       {:cancion-id nil
+        :cantidad-jugadores nil}}))

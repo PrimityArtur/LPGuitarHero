@@ -14,9 +14,6 @@ gameController.configurarAssetsLogin(
     '/img/guitar/menu_inicio/boton_entrar_lobby.png', 
     '/img/guitar/menu_inicio/boton_entrar_lobby_hover.png'
 );
-
-
-
 // CONFIG SALA ESPERA
 gameController.configurarAssetsSalaEspera(
     '/img/guitar/menu_admin/menu_admin.png', 

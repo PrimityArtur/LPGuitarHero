@@ -9,59 +9,88 @@
    [clojure.set :as set]))
 
 
-(declare
- partida-activa?
- buscar-jugador
- reconectar-jugador!
- marcar-desconectado!
- quitar-jugador-por-socket!
- reasignar-admin!
- enviar-canciones!
- buscar-jugador-por-socket
- enviar-a-jugadores!
- iniciar-partida!
- actualizar-puntaje!
- broadcast-puntaje!
- procesar-puntaje!
- jugadores-partida
- todos-terminaron?
- ranking-final
- enviar-resultado-final!
- procesar-fin-partida!
- limpiar-partida!
- agregar-al-final-cola!
- limpiar-estadisticas-jugador
- procesar-continuar!
- procesar-salir!
- lista-publica-jugadores)
-
+;; UTILIDADES 
 (defn enviar!
   [socket data]
-  (http/send! socket
-              (->json data)))
+  (when socket
+    (http/send! socket (->json data))))
+
+(defn broadcast-a!
+  "Envía `data` a la lista de jugadores dada."
+  [jugadores data]
+  (doseq [j jugadores]
+    (enviar! (:socket j) data)))
 
 (defn broadcast!
+  "Envía `data` a TODOS los jugadores del estado actual."
   [data]
-  (doseq [jugador (:jugadores @estado-servidor)]
-    (enviar! (:socket jugador)
-             data)))
+  (broadcast-a! (:jugadores @estado-servidor) data))
 
 (defn broadcast-excepto!
+  "Envía `data` a todos excepto al socket indicado."
   [socket-excluido data]
+  (doseq [j (:jugadores @estado-servidor)]
+    (when (not= socket-excluido (:socket j))
+      (enviar! (:socket j) data))))
 
-  (doseq [jugador (:jugadores @estado-servidor)]
+;; HELPERS: LECTURA DE ESTADOS 
 
-    (when (not= socket-excluido
-                (:socket jugador))
+(defn partida-activa?
+  []
+  (some? (:partida @estado-servidor)))
 
-      (enviar!
-       (:socket jugador)
-       data))))
-
-(defn nombre-ocupado?
+(defn buscar-jugador
   [nombre]
-  (some #(= nombre (:nombre %))
-        (:jugadores @estado-servidor)))
+  (first (filter #(= nombre (:nombre %))
+                 (:jugadores @estado-servidor))))
+
+(defn buscar-jugador-por-socket
+  [socket]
+  (first (filter #(= socket (:socket %))
+                 (:jugadores @estado-servidor))))
+
+(defn jugadores-partida-nombres
+  "Devuelve el set de nombres de jugadores en la partida activa."
+  []
+  (set (get-in @estado-servidor [:partida :jugadores-partida])))
+
+(defn todos-terminaron?
+  []
+  (let [en-partida (jugadores-partida-nombres)
+        terminados (set (map :nombre
+                             (filter #(and (:termino %)
+                                           (en-partida (:nombre %)))
+                                     (:jugadores @estado-servidor))))]
+    (and (seq en-partida)
+         (set/subset? en-partida terminados))))
+
+(defn ranking-final
+  []
+  (sort-by :puntaje >
+           (filter #(contains? (jugadores-partida-nombres) (:nombre %))
+                   (:jugadores @estado-servidor))))
+
+(defn lista-publica-jugadores
+  "Jugadores visibles en sala de espera (sin :en-partida)."
+  []
+  (mapv #(select-keys % [:nombre :rol])
+        (remove :en-partida (:jugadores @estado-servidor))))
+
+(defn lista-espectadores
+  []
+  (filterv #(not (:en-partida %))
+           (:jugadores @estado-servidor)))
+
+(defn cantidad-espectadores
+  []
+  (count (lista-espectadores)))
+
+
+;; HELPERS DE ESTADO (usan agent)
+(defn asignar-rol
+  []
+  (if (empty? (:jugadores @estado-servidor)) "admin" "usuario"))
+
 (defn crear-jugador
   [nombre socket]
   {:nombre nombre
@@ -74,435 +103,320 @@
    :miss 0
    :termino false})
 
-(defn asignar-rol
-  []
-  (if (empty? (:jugadores @estado-servidor))
-    "admin"
-    "usuario"))
+(defn nombre-ocupado?
+  [nombre]
+  (some #(= nombre (:nombre %))
+        (:jugadores @estado-servidor)))
 
+(defn enviar-canciones!
+  [socket]
+  (enviar! socket {:eventoServidor "listaCanciones"
+                   :canciones canciones}))
+
+;; MUTACIONES DE ESTADO - SENDS
 (defn agregar-jugador!
+  "Agrega jugador al agente y devuelve el jugador creado."
   [nombre socket]
-
   (let [rol (asignar-rol)
-
-        jugador
-        (assoc
-         (crear-jugador nombre socket)
-         :rol rol)]
-
-    (send estado-servidor
-          sm/agregar-jugador
-          jugador)
-
+        jugador (assoc (crear-jugador nombre socket) :rol rol)]
+    (send estado-servidor sm/agregar-jugador jugador)
     jugador))
 
-(defn lista-publica-jugadores
+(defn quitar-y-reasignar!
+  "Quita al jugador con `socket` y reasigna admin en una sola transacción."
+  [socket]
+  (send estado-servidor
+        (fn [estado]
+          (-> estado
+              (sm/quitar-jugador socket)
+              (sm/reasignar-admin)))))
+
+(defn marcar-desconectado!
+  [socket]
+  (send estado-servidor sm/marcar-desconectado socket))
+
+(defn reconectar-jugador!
+  [nombre socket]
+  (send estado-servidor sm/reconectar-jugador nombre socket))
+
+(defn actualizar-puntaje!
+  [nombre resultado puntaje-total]
+  (send estado-servidor sm/actualizar-puntaje nombre resultado puntaje-total))
+
+(defn marcar-terminado!
+  [nombre]
+  (send estado-servidor sm/marcar-terminado nombre))
+
+(defn limpiar-partida!
   []
-  (mapv
-   #(select-keys %
-                 [:nombre :rol])
+  (send estado-servidor sm/limpiar-partida))
 
-   (:jugadores @estado-servidor)))
+(defn quitar-agregar-reasignar!
+  "Quita al jugador del socket, lo agrega al final con stats limpias,
+   y reasigna admin — todo en una sola transacción atómica."
+  [jugador-limpio socket]
+  (send estado-servidor
+        (fn [estado]
+          (-> estado
+              (sm/quitar-jugador socket)
+              (sm/agregar-al-final jugador-limpio)
+              (sm/reasignar-admin)))))
 
+(defn actualizar-configuracion-sala!
+  [cancion-id cantidad-jugadores]
+
+  (send estado-servidor
+        sm/actualizar-configuracion-sala
+        cancion-id
+        cantidad-jugadores))
+
+;; LÓGICA DE CONEXIÓN
 (defn procesar-desconexion!
   [socket]
   (println "Desconexión detectada")
   (if (partida-activa?)
-    ;; Durante partida
-    (marcar-desconectado! socket)
-    ;; Sala de espera
     (do
-      (quitar-jugador-por-socket! socket)
-      (reasignar-admin!)
-      (broadcast!
-       {:eventoServidor "actualizarJugadores"
-        :jugadores
-        (lista-publica-jugadores)}))))
+      (marcar-desconectado! socket)
+      (await estado-servidor)
+      (broadcast! {:eventoServidor "espectadores"
+                   :cantidad (cantidad-espectadores)}))
+    (do
+      (quitar-y-reasignar! socket)
+      (await estado-servidor)
+      (broadcast! {:eventoServidor "actualizarJugadores"
+                   :jugadores (lista-publica-jugadores)}))))
 
 (defn procesar-conexion!
   [socket nombre]
   (println "Intento de conexión:" nombre)
-  (let [jugador-existente
-        (buscar-jugador nombre)]
+  (let [jugador-existente (buscar-jugador nombre)]
     (cond
-      ;; jugador nuevo
       (nil? jugador-existente)
-      (let [jugador
-            (agregar-jugador!
-             nombre
-             socket)]
-        (enviar!
-         socket
-         {:eventoServidor "libre"
-          :rol (:rol jugador)
-          :jugadores
-          (lista-publica-jugadores)})
+      (let [jugador (agregar-jugador! nombre socket)]
+        (await estado-servidor)
+        (enviar! socket {:eventoServidor "libre"
+                         :rol (:rol jugador)
+                         :jugadores (lista-publica-jugadores)})
+        (let [config (:configuracion-sala @estado-servidor)]
+        
+          (when (:cancion-id config)
+        
+            (enviar! socket
+                     {:eventoServidor "configuracionSala"
+                      :cancionId (:cancion-id config)
+                      :cantidadJugadores (:cantidad-jugadores config)})))
         (when (= "admin" (:rol jugador))
           (enviar-canciones! socket))
-        (broadcast!
-         {:eventoServidor "actualizarJugadores"
-          :jugadores
-          (lista-publica-jugadores)}))
-      ;; ya conectado
-      (:conectado jugador-existente)
-      (enviar!
-       socket
-       {:eventoServidor "ocupado"})
-      ;; reconexión durante partida
-      (and
-       (not (:conectado jugador-existente))
-       (partida-activa?))
+        (when (partida-activa?)
+          (let [partida (:partida @estado-servidor)]
+            (enviar! socket {:eventoServidor "infoEspectador"
+                             :cancion (:cancion partida)
+                             :jugadoresPartida (:jugadores-partida partida)
+                             :puntajes
+                             (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
+                                   (filter #(contains? (set (:jugadores-partida partida))
+                                                       (:nombre %))
+                                           (:jugadores @estado-servidor)))})))
+        (broadcast! {:eventoServidor "actualizarJugadores"
+                     :jugadores (lista-publica-jugadores)
+                     :espectadores (cantidad-espectadores)}))
+
+      (and (not (:conectado jugador-existente)) (partida-activa?))
       (do
-        (reconectar-jugador!
-         nombre
-         socket)
-        (enviar!
-         socket
-         {:eventoServidor "reconexionExitosa"}))
-      ;; fallback
+        (reconectar-jugador! nombre socket)
+        (await estado-servidor)
+        (let [partida (:partida @estado-servidor)
+              jugador (buscar-jugador nombre)
+              en-partida? (:en-partida jugador)]
+          (if en-partida?
+            (do
+              (enviar! socket {:eventoServidor "reconexionExitosa"
+                               :cancion (:cancion partida)
+                               :notas (:notas partida)
+                               :jugadores (:jugadores-partida partida)
+                               :puntajes
+                               (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
+                                     (filter #(contains? (set (:jugadores-partida partida))
+                                                         (:nombre %))
+                                             (:jugadores @estado-servidor)))})
+              (broadcast-excepto! socket {:eventoServidor "jugadorReconectado"
+                                          :jugador nombre}))
+            (enviar! socket {:eventoServidor   "infoEspectador"
+                             :cancion (:cancion partida)
+                             :jugadoresPartida (:jugadores-partida partida)
+                             :puntajes
+                             (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
+                                   (filter #(contains? (set (:jugadores-partida partida))
+                                                       (:nombre %))
+                                           (:jugadores @estado-servidor)))}))
+          (broadcast! {:eventoServidor "espectadores"
+                       :cantidad (cantidad-espectadores)})))
+
+      (:conectado jugador-existente)
+      (enviar! socket {:eventoServidor "ocupado"})
+
       :else
-      (enviar!
-       socket
-       {:eventoServidor "ocupado"}))))
-
-;; PARA MANEJAR CASOS MENSAJES
-(defn manejar-mensaje!
-  [socket mensaje]
-  (println mensaje)
-  (let [data (<-json mensaje)]
-    (case (:eventoCliente data)
-      "conectar"
-      (procesar-conexion!
-       socket
-       (:nombre data))
-      "iniciarPartida"
-      (iniciar-partida!
-       socket
-       (:cancion data)
-       (:cantidadJugadores data))
-      "puntaje"
-      (procesar-puntaje!
-       socket
-       (:resultado data)
-       (:puntajeTotal data))
-      "finPartida"
-      (procesar-fin-partida!
-       socket)
-      "continuar"
-      (procesar-continuar! socket)
-      "salir"
-      (procesar-salir! socket)
-      nil)))
+      (enviar! socket {:eventoServidor "ocupado"}))))
 
 
-(defn ws-handler
-  [req]
-  (http/with-channel req socket
-    (http/on-receive
-     socket
-     (fn [mensaje]
-       (manejar-mensaje!
-        socket
-        mensaje)))
-    (http/on-close
-     socket
-     (fn [status]
-       (println "Socket cerrado:" status)
-       (procesar-desconexion! socket)))))
-
-(defn partida-activa?
-  []
-  (some?
-   (:partida
-    @estado-servidor)))
-
-(defn buscar-jugador
-  [nombre]
-  (first
-   (filter
-    #(= nombre (:nombre %))
-    (:jugadores @estado-servidor))))
-
-(defn reconectar-jugador!
-  [nombre socket]
-  (send estado-servidor
-        sm/reconectar-jugador
-        nombre
-        socket))
-
-(defn marcar-desconectado!
-  [socket]
-  (send estado-servidor
-        sm/marcar-desconectado
-        socket))
-
-(defn quitar-jugador-por-socket!
-  [socket]
-  (send estado-servidor
-        sm/quitar-jugador
-        socket))
-
-(defn agregar-al-final-cola!
-  [jugador]
-  (send estado-servidor
-        sm/agregar-al-final
-        jugador))
-
-(defn reasignar-admin!
-  []
-  (send estado-servidor
-        sm/reasignar-admin))
-
-(defn enviar-canciones!
-  [socket]
-
-  (enviar!
-   socket
-
-   {:eventoServidor "listaCanciones"
-    :canciones canciones}))
-
-(defn buscar-jugador-por-socket
-  [socket]
-  (first
-   (filter
-    #(= socket (:socket %))
-    (:jugadores @estado-servidor))))
-
-(defn enviar-a-jugadores!
-  [jugadores data]
-
-  (doseq [jugador jugadores]
-
-    (enviar!
-     (:socket jugador)
-     data)))
+;; PARTIDA
 
 (defn iniciar-partida!
   [socket cancion-id cantidad]
-
-  (let [jugador
-        (buscar-jugador-por-socket socket)
-
-        jugadores-conectados
-        (count
-         (remove
-          :en-partida
-          (:jugadores @estado-servidor)))]
-
+  (let [jugador (buscar-jugador-por-socket socket)
+        jugadores-libres (remove :en-partida (:jugadores @estado-servidor))]
     (cond
-
       (not= "admin" (:rol jugador))
-      (enviar!
-       socket
-       {:eventoServidor "error"
-        :mensaje "Solo el admin puede iniciar la partida"})
+      (enviar! socket {:eventoServidor "error"
+                       :mensaje "Solo el admin puede iniciar la partida"})
 
-      (> cantidad jugadores-conectados)
-      (enviar!
-       socket
-       {:eventoServidor "error"
-        :mensaje "No hay suficientes jugadores conectados"})
+      (> cantidad (count jugadores-libres))
+      (enviar! socket {:eventoServidor "error"
+                       :mensaje "No hay suficientes jugadores conectados"})
 
       :else
 
-      (let [{:keys [cancion notas jugadores]}
-            (crear-partida!
-             cancion-id
-             cantidad)]
-
-        ;; enviar partida a los jugadores participantes
-        (enviar-a-jugadores!
-         jugadores
-
-         {:eventoServidor "partidaIniciada"
-
-          :cancion cancion
-
-          :jugadores
-          (mapv
-           #(select-keys %
-                         [:nombre :rol])
-           jugadores)
-
-          :notas notas})
-
-        ;; actualizar cola para los que NO están jugando
-        (let [esperando
-
-              (remove
-               :en-partida
-               (:jugadores @estado-servidor))]
-
-          (enviar-a-jugadores!
-           esperando
-
-           {:eventoServidor "actualizarJugadores"
-
-            :jugadores
-            (lista-publica-jugadores)}))))))
-
-(defn actualizar-puntaje!
-  [nombre resultado puntaje-total]
-  (send estado-servidor
-        sm/actualizar-puntaje
-        nombre
-        resultado
-        puntaje-total))
-
-(defn marcar-terminado!
-  [nombre]
-  (send estado-servidor
-        sm/marcar-terminado
-        nombre))
-
+      (let [_ (actualizar-configuracion-sala!
+               cancion-id
+               cantidad)
+            {:keys [cancion notas jugadores]} (crear-partida! cancion-id cantidad)]
+        (broadcast-a! jugadores {:eventoServidor "partidaIniciada"
+                                 :cancion cancion
+                                 :jugadores (mapv #(select-keys % [:nombre :rol]) jugadores)
+                                 :notas notas})
+        (await estado-servidor)
+        (let [espectadores (lista-espectadores)]
+          (broadcast-a! espectadores {:eventoServidor "infoEspectador"
+                                      :cancion cancion
+                                      :jugadoresPartida (mapv :nombre jugadores)
+                                      :puntajes []})
+          (broadcast! {:eventoServidor "actualizarJugadores"
+                       :jugadores (lista-publica-jugadores)
+                       :espectadores (count espectadores)}))))))
 
 (defn broadcast-puntaje!
   [socket nombre resultado puntaje-total]
-  (broadcast-excepto!
-   socket
-   {:eventoServidor "actualizarPuntaje"
-    :jugador nombre
-    :resultado resultado
-    :puntajeTotal puntaje-total}))
+  (let [estado @estado-servidor
+        partida (:partida estado)
+        todos (:jugadores estado)]
+    (doseq [j todos]
+      (when (and (not= socket (:socket j))
+                 (:socket j))
+        (enviar! (:socket j)
+                 {:eventoServidor "actualizarPuntaje"
+                  :jugador nombre
+                  :resultado resultado
+                  :puntajeTotal puntaje-total})))
+    (let [espectadores  (lista-espectadores)
+          nombres-part  (set (:jugadores-partida partida))
+          puntajes-todos (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
+                               (filter #(nombres-part (:nombre %)) todos))]
+      (broadcast-a! espectadores {:eventoServidor "puntajeEspectador"
+                                  :jugador nombre
+                                  :resultado resultado
+                                  :puntajeTotal puntaje-total
+                                  :puntajes puntajes-todos}))))
 
 (defn procesar-puntaje!
   [socket resultado puntaje-total]
-  (let [jugador
-        (buscar-jugador-por-socket socket)
-        nombre
-        (:nombre jugador)]
-    (actualizar-puntaje!
-     nombre
-     resultado
-     puntaje-total)
-    (broadcast-puntaje!
-     socket
-     nombre
-     resultado
-     puntaje-total)))
-
-(defn jugadores-partida
-  []
-  (:jugadores-partida
-   (:partida @estado-servidor)))
-
-(defn todos-terminaron?
-  []
-  (let [nombres-partida
-        (set (jugadores-partida))
-        terminados
-        (set
-         (map :nombre
-              (filter
-               #(and (:termino %) (nombres-partida (:nombre %)))
-               (:jugadores @estado-servidor))))]
-    (set/subset? nombres-partida terminados)))
-
-(defn ranking-final
-  []
-  (sort-by
-   :puntaje
-   >
-   (filter
-    #(some
-      #{(:nombre %)}
-      (jugadores-partida))
-    (:jugadores @estado-servidor))))
-
-
-(defn mover-jugador-al-final!
-  [nombre]
-  (send estado-servidor
-        sm/mover-jugador-al-final
-        nombre))
+  (let [jugador (buscar-jugador-por-socket socket)
+        nombre (:nombre jugador)]
+    (actualizar-puntaje! nombre resultado puntaje-total)
+    (broadcast-puntaje! socket nombre resultado puntaje-total)))
 
 (defn enviar-resultado-final!
   []
   (let [ranking (ranking-final)
         ganador (first ranking)
-        participantes
-        (filter :en-partida (:jugadores @estado-servidor))]
-    (enviar-a-jugadores!
-     participantes
-     {:eventoServidor "resultadoFinal"
-      :ganador (:nombre ganador)
-      :ranking
-      (mapv
-       #(select-keys % [:nombre :puntaje :perfect :good :miss])
-       ranking)})
-    (limpiar-partida!)
-    (swap!
-     estado-servidor
-     update
-     :jugadores
-     (fn [jugadores]
-       (mapv #(dissoc % :en-partida) jugadores)))))
-
+        participantes (filter :en-partida (:jugadores @estado-servidor))
+        espectadores (lista-espectadores)
+        payload {:eventoServidor "resultadoFinal"
+                      :ganador (:nombre ganador)
+                      :ranking (mapv #(select-keys % [:nombre :puntaje :perfect :good :miss])
+                                            ranking)}]
+    (broadcast-a! participantes payload)
+    (broadcast-a! espectadores  payload)
+    (send estado-servidor
+          (fn [estado]
+            (-> estado
+                (sm/limpiar-partida)
+                (update :jugadores
+                        (fn [jugadores]
+                          (mapv #(dissoc % :en-partida) jugadores))))))))
 
 (defn procesar-fin-partida!
   [socket]
-  (let [jugador
-        (buscar-jugador-por-socket socket)
-        nombre
-        (:nombre jugador)]
-    (marcar-terminado!
-     nombre)
-    (broadcast-excepto!
-     socket
-     {:eventoServidor "jugadorTermino"
-      :jugador nombre})
-    (when
-     (todos-terminaron?)
+  (let [jugador (buscar-jugador-por-socket socket)
+        nombre  (:nombre jugador)]
+    (marcar-terminado! nombre)
+    (broadcast-excepto! socket {:eventoServidor "jugadorTermino"
+                                :jugador nombre})
+    (await estado-servidor)
+    (when (todos-terminaron?)
       (enviar-resultado-final!))))
 
-(defn limpiar-partida!
-  []
-  (send estado-servidor
-        sm/limpiar-partida))
 
-(defn preparar-sala-espera!
-  []
-  (send estado-servidor
-        sm/preparar-sala-espera))
-
+;; CONTINUAR / SALIR
 (defn limpiar-estadisticas-jugador
   [jugador]
-  (assoc jugador
-         :puntaje 0
-         :perfect 0
-         :good 0
-         :miss 0
-         :termino false))
+  (assoc jugador :puntaje 0 :perfect 0 :good 0 :miss 0 :termino false))
 
 (defn procesar-continuar!
   [socket]
-  (let [jugador
-        (buscar-jugador-por-socket socket)
-        jugador-limpio
-        (-> jugador
-            limpiar-estadisticas-jugador
-            (dissoc :en-partida))]
-    (quitar-jugador-por-socket! socket)
-    (agregar-al-final-cola! jugador-limpio)
-    (reasignar-admin!)
-    (broadcast!
-     {:eventoServidor "actualizarJugadores"
-      :jugadores (lista-publica-jugadores)})
-    (enviar!
-     socket
-     {:eventoServidor "salaEspera"})))
+  (let [jugador (buscar-jugador-por-socket socket)
+        jugador-limpio (-> jugador
+                           limpiar-estadisticas-jugador
+                           (dissoc :en-partida))]
+    (quitar-agregar-reasignar! jugador-limpio socket)
+    (await estado-servidor)
+    (broadcast! {:eventoServidor "actualizarJugadores"
+                 :jugadores (lista-publica-jugadores)
+                 :espectadores (cantidad-espectadores)})
+    (enviar! socket {:eventoServidor "salaEspera"})))
 
 (defn procesar-salir!
   [socket]
-  (quitar-jugador-por-socket! socket)
-  (reasignar-admin!)
-  (broadcast!
-   {:eventoServidor "actualizarJugadores"
-    :jugadores (lista-publica-jugadores)}))
+  (quitar-y-reasignar! socket)
+  (await estado-servidor)
+  (broadcast! {:eventoServidor "actualizarJugadores"
+               :jugadores (lista-publica-jugadores)
+               :espectadores (cantidad-espectadores)}))
 
-(defn lista-publica-jugadores
-  []
-  (mapv
-   #(select-keys % [:nombre :rol])
-   (remove :en-partida (:jugadores @estado-servidor))))
+;; GUARDAR ESTADO CONFIGURACION SALA DE ESPERA
+(defn procesar-configuracion-sala!
+  [socket cancion-id cantidad-jugadores]
+  (let [jugador (buscar-jugador-por-socket socket)]
+    (when (= "admin" (:rol jugador))
+      (actualizar-configuracion-sala!
+       cancion-id
+       cantidad-jugadores)
+      (broadcast-excepto!
+       socket
+       {:eventoServidor "configuracionSala"
+        :cancionId cancion-id
+        :cantidadJugadores cantidad-jugadores}))))
+
+;; ROUTER DE MENSAJES
+(defn manejar-mensaje!
+  [socket mensaje]
+  (println mensaje)
+  (let [data (<-json mensaje)]
+    (case (:eventoCliente data)
+      "conectar" (procesar-conexion! socket (:nombre data))
+      "iniciarPartida" (iniciar-partida! socket (:cancion data) (:cantidadJugadores data))
+      "puntaje" (procesar-puntaje! socket (:resultado data) (:puntajeTotal data))
+      "finPartida" (procesar-fin-partida! socket)
+      "continuar" (procesar-continuar! socket)
+      "salir" (procesar-salir! socket)
+      "configuracionSala" (procesar-configuracion-sala! socket (:cancionId data) (:cantidadJugadores data))
+      nil)))
+
+(defn ws-handler
+  [req]
+  (http/with-channel req socket
+    (http/on-receive socket
+                     (fn [mensaje] (manejar-mensaje! socket mensaje)))
+    (http/on-close   socket
+                     (fn [status]
+                       (println "Socket cerrado:" status)
+                       (procesar-desconexion! socket)))))
